@@ -50,7 +50,7 @@ public class ArgsParser {
 			jCommander.parse(args);
 		} catch (ParameterException e) {
 			System.err.println("Missing Parameter");
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 
