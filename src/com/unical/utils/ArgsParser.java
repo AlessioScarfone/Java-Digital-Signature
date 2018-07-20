@@ -5,7 +5,6 @@ import java.io.File;
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParameterException;
 
 public class ArgsParser {
 
@@ -21,7 +20,7 @@ public class ArgsParser {
 	private String password;
 
 	@Parameter(names = { "-d",
-			"-driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1 )
+			"-driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1)
 	private File driver;
 
 	@Parameter(names = { "-h", "-help" }, help = true)
@@ -43,21 +42,18 @@ public class ArgsParser {
 		return driver;
 	}
 
-	public ArgsParser(String[] args) {
+	public ArgsParser() {
 		jCommander = new JCommander(this);
 		jCommander.setProgramName("PKCS#11 Digital Signature Tool");
-		try {
-			jCommander.parse(args);
-		} catch (ParameterException e) {
-			System.err.println("Missing Parameter");
-//			e.printStackTrace();
-		}
 	}
-
+	
+	public void parseArgs(String[] args) {
+		jCommander.parse(args);
+	}
+	
 	public void showHelp() {
 		jCommander.usage();
 	}
-
 
 	/************************
 	 ******** Converter *********

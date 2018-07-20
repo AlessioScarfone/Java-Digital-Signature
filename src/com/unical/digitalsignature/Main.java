@@ -3,6 +3,7 @@ package com.unical.digitalsignature;
 import java.io.File;
 import java.util.List;
 
+import com.beust.jcommander.ParameterException;
 import com.google.common.io.Files;
 import com.unical.utils.ArgsParser;
 
@@ -22,9 +23,14 @@ public class Main {
 	private static File driverPath = null;
 
 	public static void main(String[] args) {
-
-		ArgsParser cmdr = new ArgsParser(args);
-
+		ArgsParser cmdr = new ArgsParser();;
+		try {
+			cmdr.parseArgs(args);
+		} catch (ParameterException e) {
+			System.err.println("Missing Parameter");
+			return;
+//			e.printStackTrace();
+		}
 		if (cmdr.isHelp()) {
 			cmdr.showHelp();
 			return;
