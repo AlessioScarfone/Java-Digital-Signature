@@ -1,0 +1,91 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>DigitalSignature</groupId>
+	<artifactId>DigitalSignature</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.digidoc4j.dss/dss-token -->
+		<dependency>
+			<groupId>org.digidoc4j.dss</groupId>
+			<artifactId>dss-token</artifactId>
+			<version>5.2.d4j.3</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.digidoc4j.dss/dss-document -->
+		<dependency>
+			<groupId>org.digidoc4j.dss</groupId>
+			<artifactId>dss-document</artifactId>
+			<version>5.2.d4j.3</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.digidoc4j.dss/dss-model -->
+		<dependency>
+			<groupId>org.digidoc4j.dss</groupId>
+			<artifactId>dss-model</artifactId>
+			<version>5.2.d4j.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.digidoc4j.dss/dss-cades -->
+		<dependency>
+			<groupId>org.digidoc4j.dss</groupId>
+			<artifactId>dss-cades</artifactId>
+			<version>5.2.d4j.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.digidoc4j.dss/dss-pades -->
+		<dependency>
+			<groupId>org.digidoc4j.dss</groupId>
+			<artifactId>dss-pades</artifactId>
+			<version>5.2.d4j.3</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.digidoc4j.dss/dss-utils-apache-commons -->
+		<dependency>
+			<groupId>org.digidoc4j.dss</groupId>
+			<artifactId>dss-utils-apache-commons</artifactId>
+			<version>5.2.d4j.3</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.digidoc4j.dss/dss-utils-google-guava -->
+		<dependency>
+			<groupId>org.digidoc4j.dss</groupId>
+			<artifactId>dss-utils-google-guava</artifactId>
+			<version>5.2.d4j.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>1.74</version>
+		</dependency>
+		
+		
+	</dependencies>
+</project>
