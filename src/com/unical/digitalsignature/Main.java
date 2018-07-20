@@ -1,5 +1,6 @@
 package com.unical.digitalsignature;
 
+import java.io.Console;
 import java.io.File;
 import java.util.List;
 
@@ -23,13 +24,14 @@ public class Main {
 	private static File driverPath = null;
 
 	public static void main(String[] args) {
-		ArgsParser cmdr = new ArgsParser();;
+		ArgsParser cmdr = new ArgsParser();
+		;
 		try {
 			cmdr.parseArgs(args);
 		} catch (ParameterException e) {
 			System.err.println("Missing Parameter");
 			return;
-//			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		if (cmdr.isHelp()) {
 			cmdr.showHelp();
@@ -39,22 +41,35 @@ public class Main {
 			setDriver(cmdr.getDriver());
 		else
 			useDefaultDriver();
-		String pass = cmdr.getPassword();
+
+		// String pass = cmdr.getPassword();
+
+		char[] pass = getPassword();
+		if(pass == null) {
+			System.err.println("Insert password please.");
+			return;
+		}
+
 		File inputFile = cmdr.getFileToSign();
+
+		if (inputFile == null) {
+			System.err.println("No File input");
+			return;
+		}
 
 		if (!checkFile(inputFile))
 			return;
-		
+
 		Pkcs11SignatureToken token = SignService.connectToToken(driverPath, pass);
 		List<DSSPrivateKeyEntry> keys;
 		try {
 			keys = token.getKeys();
 		} catch (DSSException e) {
 			System.err.println("Token access failed.");
-//			e.printStackTrace();
+			// e.printStackTrace();
 			return;
 		}
-		
+
 		DSSPrivateKeyEntry signer = SignService.getSigner(keys);
 		// Preparing parameters for the PAdES signature
 		PAdESSignatureParameters parameters = SignService.setPAdESSParameter(signer);
@@ -73,8 +88,27 @@ public class Main {
 		// We invoke the padesService to sign the document with the signature value
 		// obtained the previous step.
 		DSSDocument signedDocument = service.signDocument(toSignDocument, parameters, signatureValue);
-		SignService.createSignedPDF(signedDocument,inputFile);
+		SignService.createSignedPDF(signedDocument, inputFile);
 		System.out.println("END");
+	}
+
+	private static char[] getPassword() {
+		Console cnsl = null;
+
+		try {
+			// creates a console object
+			cnsl = System.console();
+			// if console is not null
+			if (cnsl != null) {
+				char[] pwd = cnsl.readPassword("Password: ");
+				return	pwd;
+			}
+		} catch (Exception ex) {
+
+			// if any error occurs
+			ex.printStackTrace();
+		}
+		return null;
 	}
 
 	private static boolean checkFile(File inputFile) {
@@ -99,6 +133,8 @@ public class Main {
 	}
 
 	private static void useDefaultDriver() {
+		
+		//TODO: add configuration file for path of default driver
 		String separator = System.getProperty("file.separator");
 		String os = System.getProperty("os.name").toLowerCase();
 		String arch = checkOSArchitecture();

@@ -24,9 +24,9 @@ import eu.europa.esig.dss.x509.CertificateToken;
 
 public class SignService {
 
-	public static Pkcs11SignatureToken connectToToken(File driverPath, String pass) {
+	public static Pkcs11SignatureToken connectToToken(File driverPath, char[] pass) {
 
-		Pkcs11SignatureToken token = new Pkcs11SignatureToken(driverPath.getAbsolutePath(), pass.toCharArray());
+		Pkcs11SignatureToken token = new Pkcs11SignatureToken(driverPath.getAbsolutePath(), pass);
 		return token;
 	}
 
@@ -63,6 +63,8 @@ public class SignService {
 		String separator = System.getProperty("file.separator");
 		String newfilename = Files.getNameWithoutExtension(inputFile.getName())+"-signed.pdf";
 		String dir = inputFile.getParent();
+		if(dir == null)
+			dir = ".";
 		
 		FileOutputStream fos;
 		try {

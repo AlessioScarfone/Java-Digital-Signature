@@ -16,23 +16,23 @@ public class ArgsParser {
 	@Parameter(description = "File To Sign", converter = FileConverter.class)
 	private File fileToSign;
 
-	@Parameter(names = { "-p", "-password" }, description = "Token Password", password = true, required = true)
-	private String password;
+//	@Parameter(names = { "-p", "--password" }, description = "Token Password", password = true, required = true,echoInput = true)
+//	private String password;
 
 	@Parameter(names = { "-d",
-			"-driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1)
+			"--driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1)
 	private File driver;
 
-	@Parameter(names = { "-h", "-help" }, help = true)
+	@Parameter(names = { "-h", "--help" }, help = true)
 	private boolean help;
-
+	
 	public File getFileToSign() {
 		return fileToSign;
 	}
 
-	public String getPassword() {
-		return password;
-	}
+//	public String getPassword() {
+//		return password;
+//	}
 
 	public boolean isHelp() {
 		return help;
