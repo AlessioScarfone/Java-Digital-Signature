@@ -36,7 +36,7 @@ public class SignService {
 		}
 	}
 
-	public static PAdESSignatureParameters setPAdESSParameter(DSSPrivateKeyEntry signer) {
+	public static PAdESSignatureParameters setPAdESParameter(DSSPrivateKeyEntry signer) {
 		PAdESSignatureParameters parameters = new PAdESSignatureParameters();
 		// We choose the level of the signature (-B, -T, -LT, -LTA).
 
