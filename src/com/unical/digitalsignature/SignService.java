@@ -62,6 +62,12 @@ public class SignService {
 	public static void createSignedPDF(DSSDocument signedDocument, File inputFile) {
 		String separator = System.getProperty("file.separator");
 		String newfilename = Files.getNameWithoutExtension(inputFile.getName())+"-signed.pdf";
+		int c=1;
+		while(new File(newfilename).exists()) {
+			newfilename =  Files.getNameWithoutExtension(inputFile.getName())+"-signed("+c+").pdf";
+			c++;
+		}
+		
 		String dir = inputFile.getParent();
 		if(dir == null)
 			dir = ".";
