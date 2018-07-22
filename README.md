@@ -35,5 +35,6 @@ java -jar signer.jar test.txt -c
 
 -----
 ##### Dependencies: 
+
 - Digital Signature Services (DSS): https://github.com/esig/dss
 - JCommander: https://github.com/cbeust/jcommander
