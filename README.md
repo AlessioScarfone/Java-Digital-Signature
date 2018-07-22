@@ -7,8 +7,16 @@ NOTA: only ***PAdES*** format
 #help
 java -jar signer.jar -h
 
-Usage:PKCS#11 Digital Signature Tool                                                                      Options:                                                                                                  -c, --cades                                                                                                 		CAdES sign format
--p, --pades                                                                                                 	PAdES sign format                                                                                   -d, --driver                                                                                                	PKCS#11 Driver                                                                                      -h, --help 
+Usage:PKCS#11 Digital Signature Tool
+  Options:
+    -c, --cades
+      CAdES sign format
+    -p, --pades
+      PAdES sign format
+    -d, --driver
+      PKCS#11 Driver
+    -h, --help 
+    
 ```
 
 #### Basic Usage:
