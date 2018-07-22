@@ -42,4 +42,4 @@ java -jar signer.jar test.txt -c
 -----
 
 #### NOTE:
-Tested only on Windows.
+**Tested only on Windows.**
