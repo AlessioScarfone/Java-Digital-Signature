@@ -32,3 +32,8 @@ java -jar signer filetosign.pdf -d customdriver
 java -jar signer.jar test.pdf -p 
 java -jar signer.jar test.txt -c 
 ```
+
+-----
+##### Dependencies: 
+- Digital Signature Services (DSS): https://github.com/esig/dss
+- JCommander: https://github.com/cbeust/jcommander
