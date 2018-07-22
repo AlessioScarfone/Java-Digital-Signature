@@ -2,8 +2,8 @@
 Java command line  tool for digital signature
 
 ```bash
-#help
-java -jar signer.jar -h
+# help
+> java -jar signer.jar -h
 
 Usage:PKCS#11 Digital Signature Tool
   Options:
@@ -19,18 +19,18 @@ Usage:PKCS#11 Digital Signature Tool
 
 #### Basic Usage:
 ```bash
-#use default driver and use CAdES sign format
-java -jar signer.jar filetosign.pdf
+# use default driver and use CAdES sign format
+> java -jar signer.jar filetosign.pdf
 
-#use a custom driver
-java -jar signer filetosign.pdf -d customdriver
+# use a custom driver
+> java -jar signer filetosign.pdf -d customdriver
 
 #setting sign format with option
--p: PAdES
--c: CAdES
+# -p: PAdES
+# -c: CAdES
 
-java -jar signer.jar test.pdf -p 
-java -jar signer.jar test.txt -c 
+> java -jar signer.jar test.pdf -p 
+> java -jar signer.jar test.txt -c 
 ```
 
 -----
