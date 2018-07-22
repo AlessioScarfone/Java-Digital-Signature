@@ -25,7 +25,7 @@ Usage:PKCS#11 Digital Signature Tool
 # use a custom driver
 > java -jar signer filetosign.pdf -d customdriver
 
-#setting sign format with option
+# select sign format with option
 # -p: PAdES
 # -c: CAdES
 
