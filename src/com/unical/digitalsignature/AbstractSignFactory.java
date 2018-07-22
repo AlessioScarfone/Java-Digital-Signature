@@ -55,6 +55,7 @@ public abstract class AbstractSignFactory implements ISignFactory {
 	}
 	
 	public void writeFile(String dir,String newfilename,DSSDocument signedDocument) {
+		System.out.println("\nCreate signed file: "+ newfilename);
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(dir + Utility.separator + newfilename);

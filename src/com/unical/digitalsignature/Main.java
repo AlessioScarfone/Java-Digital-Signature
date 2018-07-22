@@ -126,7 +126,6 @@ public class Main {
 		// We invoke the padesService to sign the document with the signature value
 		// obtained the previous step.
 		DSSDocument signedDocument = service.signDocument(toSignDocument, parameters, signatureValue);
-		System.out.println("Creation of signed file");
 		factory.createSignedFile(signedDocument, inputFile);
 		System.out.println("END");
 
