@@ -1,8 +1,6 @@
 # Java-Digital-Signature
 Java command line  tool for digital signature
 
-NOTA: only ***PAdES*** format
-
 ```bash
 #help
 java -jar signer.jar -h
