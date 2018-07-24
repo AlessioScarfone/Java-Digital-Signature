@@ -15,8 +15,8 @@ import eu.europa.esig.dss.signature.AbstractSignatureService;
 import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 
-public class SignFactoryCAdES extends AbstractSignFactory {
-
+public class CAdESSignFactory extends AbstractSignFactory {
+	
 	public AbstractSignatureParameters setParameter(DSSPrivateKeyEntry signer) {
 		CAdESSignatureParameters parameters = new CAdESSignatureParameters();
 		parameters.setSignatureLevel(SignatureLevel.CAdES_BASELINE_B);

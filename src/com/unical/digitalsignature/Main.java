@@ -12,6 +12,7 @@ import com.unical.utils.ArgsParser;
 import com.unical.utils.Utility;
 
 import eu.europa.esig.dss.AbstractSignatureParameters;
+import eu.europa.esig.dss.DSSASN1Utils;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.DigestAlgorithm;
@@ -21,20 +22,28 @@ import eu.europa.esig.dss.ToBeSigned;
 import eu.europa.esig.dss.signature.AbstractSignatureService;
 import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
 import eu.europa.esig.dss.token.Pkcs11SignatureToken;
+import eu.europa.esig.dss.x509.CertificateToken;
 
 public class Main {
-	
-	private enum SystemType {WINDOWS,LINUX,MAC}
+
+	private enum SystemType {
+		WINDOWS, LINUX, MAC
+	}
 
 	private static File driverPathWin = new File(Utility.buildFilePath("driver", "Windows", "bit4xpki.dll"));
 	private static File driverPathLinux32 = new File(Utility.buildFilePath("driver", "Linux", "32", "libbit4xpki.so"));
 	private static File driverPathLinux64 = new File(Utility.buildFilePath("driver", "Linux", "64", "libbit4xpki.so"));
 
 	private static File currentDriverPath = null;
-
+	
 	private static SignFormat selectedSignFormat = SignFormat.PADES;
 
 	public static void main(String[] args) {
+
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+
+		// TODO hide warning also for dss.
+
 		ArgsParser cmdr = new ArgsParser();
 		try {
 			cmdr.parseArgs(args);
@@ -42,22 +51,32 @@ public class Main {
 			System.err.println("Missing Parameter");
 			return;
 		}
+		// Show help
 		if (cmdr.isHelp()) {
 			cmdr.showHelp();
 			return;
 		}
-		if (!checkSelectedSignFormat(cmdr)) {
-			System.err.println("PAdES and CAdES are mutually exclusive. Select only one please.");
-			return;
-		}
 
+		// use custom or default driver
 		if (cmdr.getDriver() != null) {
-			if (!setDriver(cmdr.getDriver())) {
+			if (setDriver(cmdr.getDriver()) == false) {
 				System.err.println("Error setting driver");
 				return;
 			}
 		} else
 			useDefaultDriver();
+
+		// show certificates info and key usage
+		if (cmdr.showCertInfo() || cmdr.showKeyUsage()) {
+			showInfo(cmdr.showCertInfo(),cmdr.showKeyUsage());
+			return;
+		}
+
+		// check selected sign format
+		if (!checkSelectedSignFormat(cmdr)) {
+			System.err.println("PAdES and CAdES are mutually exclusive. Select only one please.");
+			return;
+		}
 
 		File inputFile = cmdr.getFileToSign();
 
@@ -65,11 +84,11 @@ public class Main {
 			System.err.println("No File input");
 			return;
 		}
-
+		// check file to sign format
 		if (!checkFile(inputFile))
 			return;
 
-		sign(inputFile);
+		sign(inputFile, cmdr.getUseVisibleSignature());
 
 	}
 
@@ -89,17 +108,51 @@ public class Main {
 		return true;
 	}
 
-	private static void sign(File inputFile) {
+	private static void showInfo(boolean info, boolean keyusage) {
+		char[] pass = Utility.getPassword();
+		AbstractSignFactory factory = new CAdESSignFactory();
+		Pkcs11SignatureToken token = factory.connectToToken(currentDriverPath, pass);
+		List<DSSPrivateKeyEntry> keys;
+		try {
+			keys = token.getKeys();
+			int count = 0;
+			for (DSSPrivateKeyEntry dssPrivateKeyEntry : keys) {
+				CertificateToken ct= dssPrivateKeyEntry.getCertificate();
+				System.out.println(DSSASN1Utils.getHumanReadableName(ct));
+				
+				System.out.println("Certificate:" + count);
+				if (info == true) {
+					System.out.println("Info:");
+					factory.showCertificateData(ct);
+					System.out.println();
+				}
+				if (keyusage = true) {
+					System.out.println("Key Usage:");
+					factory.showKeyUsage(ct);
+					System.out.println();
+				}
+				System.out.println("---------");
+				count++;
+			}
+		} catch (DSSException e) {
+			System.err.println("Token access failed.");
+			// e.printStackTrace();
+			return;
+		}
+
+	}
+
+	private static void sign(File inputFile, boolean useVisibleSignature) {
 		System.out.println("Start Signature Procedure");
 		char[] pass = Utility.getPassword();
-		
+
 		System.out.println();
 
 		AbstractSignFactory factory = null;
 		if (selectedSignFormat == SignFormat.CADES) {
-			factory = new SignFactoryCAdES();
+			factory = new CAdESSignFactory();
 		} else if (selectedSignFormat == SignFormat.PADES) {
-			factory = new SignFactoryPAdES();
+			factory = new PAdESSignFactory(useVisibleSignature);
 		}
 
 		Pkcs11SignatureToken token = factory.connectToToken(currentDriverPath, pass);
@@ -169,7 +222,7 @@ public class Main {
 		} else if (os.contains("mac")) {
 			// TODO ??
 		}
-		//extract only needed driver
+		// extract only needed driver
 		if (!extractDrivers(s))
 			return false;
 		System.out.println("Use the default driver located in: " + currentDriverPath);
@@ -208,8 +261,8 @@ public class Main {
 				byte[] bytes = Resources.toByteArray(linux64);
 				Files.write(bytes, driverPathLinux64);
 			}
-			
-			//TODO add MAC driver
+
+			// TODO add MAC driver
 		} catch (IOException e) {
 			System.err.println("Error in default driver extractaction");
 			return false;

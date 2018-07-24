@@ -24,12 +24,21 @@ public class ArgsParser {
 
 	@Parameter(names = { "-p", "--pades" }, description = "PAdES sign format", required = false, order = 1)
 	private boolean pades;
+	
+	@Parameter(names = {"-v","--visible-signature"},description = "Add Visible signature ",order = 2)
+	private boolean useVisibleSignature;
 
 	@Parameter(names = { "-d",
-			"--driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1, order = 2)
+			"--driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1, order = 3)
 	private File driver;
+	
+	@Parameter(names = {"-i","--info-certificates"},description="show certificates info",order = 4)
+	private boolean showCertInfo;
+	
+	@Parameter(names = {"-u","--key-usage"},description="show key usage",order = 5)
+	private boolean showKeyUsage;
 
-	@Parameter(names = { "-h", "--help" }, help = true, order = 3)
+	@Parameter(names = { "-h", "--help" }, help = true, order = 6)
 	private boolean help = false;
 
 	public File getFileToSign() {
@@ -50,6 +59,18 @@ public class ArgsParser {
 
 	public File getDriver() {
 		return driver;
+	}
+	
+	public boolean getUseVisibleSignature() {
+		return useVisibleSignature;
+	}
+	
+	public boolean showCertInfo() {
+		return showCertInfo;
+	}
+	
+	public boolean showKeyUsage() {
+		return showKeyUsage;
 	}
 
 	public ArgsParser() {
@@ -74,6 +95,8 @@ public class ArgsParser {
 			System.out.println("\t" + parameterDescription.getDescription().toString());
 		}
 	}
+
+	
 
 	/************************
 	 ****** Converter *******
