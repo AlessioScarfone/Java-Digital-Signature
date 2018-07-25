@@ -42,8 +42,6 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
             Default: false
           -vi, --visible-signature-image
             add visible signature - text and image
-
-
     
 ```
 
