@@ -18,7 +18,9 @@ public class ArgsParser {
 	/************************
 	 **** CLI Parameters ****
 	 ************************/
-
+	@Parameter(names = { "-h", "--help" }, description = "show usage", help = true, order = 0)
+	private boolean help = false;
+	
 	/*
 	 * Class that contain the common parameters of all command
 	 */
@@ -74,11 +76,11 @@ public class ArgsParser {
 		private File fileToSign;
 
 		@Parameter(names = { "-v",
-				"--visible-signature" }, description = "Add Visible Signature - Only Text ", arity = 0, order = 6)
+				"--visible-signature" }, description = "add visible signature - only text ", arity = 0, order = 6)
 		private boolean useVisibleSignature;
 
 		@Parameter(names = { "-vi",
-				"--visible-signature-image" }, description = "Add Visible Signature - Text and Image ", arity = 1, order = 7)
+				"--visible-signature-image" }, description = "add visible signature - text and image ", arity = 1, order = 7)
 		private File visibleSignatureImage;
 
 		public File getFileToSign() {
@@ -183,7 +185,7 @@ public class ArgsParser {
 	}
 
 	public boolean isHelp() {
-		return getCommand().isHelp();
+		return (help || getCommand().isHelp() );
 	}
 
 	public File getDriver() {
