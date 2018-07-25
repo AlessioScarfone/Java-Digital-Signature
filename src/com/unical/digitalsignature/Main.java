@@ -165,6 +165,11 @@ public class Main {
 			return;
 		}
 		DSSPrivateKeyEntry signer = factory.getSigner(keys);
+		
+		System.out.println("Certificate to use:");
+		CertificateToken ct= signer.getCertificate();
+		System.out.println(DSSASN1Utils.getHumanReadableName(ct));
+		
 		// Preparing parameters for the PAdES signature
 		AbstractSignatureParameters parameters = factory.setParameter(signer);
 		AbstractSignatureService service = factory.createService();
