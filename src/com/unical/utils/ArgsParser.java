@@ -1,102 +1,192 @@
 package com.unical.utils;
 
 import java.io.File;
-import java.util.Comparator;
-import java.util.List;
 
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParameterDescription;
+import com.beust.jcommander.Parameters;
+import com.unical.digitalsignature.SignFormat;
 
 public class ArgsParser {
 
 	private JCommander jCommander;
 
+	public final static String cadesCommandLabel = "cades";
+	public final static String padesCommandLabel = "pades";
+
 	/************************
 	 **** CLI Parameters ****
 	 ************************/
-	@Parameter(description = "File to sign", converter = FileConverter.class)
-	private File fileToSign;
-
-	@Parameter(names = { "-c", "--cades" }, description = "CAdES sign format", required = false, order = 0)
-	private boolean cades;
-
-	@Parameter(names = { "-p", "--pades" }, description = "PAdES sign format", required = false, order = 1)
-	private boolean pades;
 	
-	@Parameter(names = {"-v","--visible-signature"},description = "Add Visible signature ",order = 2)
-	private boolean useVisibleSignature;
+	/*
+	 * Class that contain the common parameters of all command
+	 */
+	private class CommonParam {
+		@Parameter(names = { "-d",
+				"--driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1, order = 1)
+		private File driver;
 
-	@Parameter(names = { "-d",
-			"--driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1, order = 3)
-	private File driver;
-	
-	@Parameter(names = {"-i","--info-certificates"},description="show certificates info",order = 4)
-	private boolean showCertInfo;
-	
-	@Parameter(names = {"-u","--key-usage"},description="show key usage",order = 5)
-	private boolean showKeyUsage;
+		@Parameter(names = { "-i", "--info-certificates" }, description = "show certificates info", order = 3)
+		private boolean showCertInfo;
 
-	@Parameter(names = { "-h", "--help" }, help = true, order = 6)
-	private boolean help = false;
+		@Parameter(names = { "-u", "--key-usage" }, description = "show key usage", order = 2)
+		private boolean showKeyUsage;
 
-	public File getFileToSign() {
-		return fileToSign;
+		@Parameter(names = { "-h", "--help" }, help = true, order = 0)
+		private boolean help = false;
+
+		public boolean isHelp() {
+			return help;
+		}
+
+		public File getDriver() {
+			return driver;
+		}
+
+		public boolean showCertInfo() {
+			return showCertInfo;
+		}
+
+		public boolean showKeyUsage() {
+			return showKeyUsage;
+		}
 	}
 
-	public boolean isCAdES() {
-		return cades;
+	private CAdESCommand cadesCommand;
+	@Parameters(commandDescription = "CAdES sign format")
+	public class CAdESCommand extends CommonParam {
+		@Parameter(description = "FileToSign", converter = FileConverter.class)
+		private File fileToSign;
+
+		public File getFileToSign() {
+			return fileToSign;
+		}
 	}
 
-	public boolean isPAdES() {
-		return pades;
+	private PAdESCommand padesCommand;
+
+	@Parameters(commandDescription = "PAdES sign format")
+	public class PAdESCommand extends CommonParam {
+
+		@Parameter(description = "FileToSign", converter = FileConverter.class, arity = 1)
+		private File fileToSign;
+
+		@Parameter(names = { "-v", "--visible-signature" }, description = "Add Visible signature ", arity = 0)
+		private boolean useVisibleSignature;
+
+		public File getFileToSign() {
+			return fileToSign;
+		}
+
+		public boolean getVisibleSignature() {
+			return useVisibleSignature;
+		}
+
 	}
 
-	public boolean isHelp() {
-		return help;
+	public CAdESCommand getCadesCommand() {
+		return cadesCommand;
 	}
 
-	public File getDriver() {
-		return driver;
-	}
-	
-	public boolean getUseVisibleSignature() {
-		return useVisibleSignature;
-	}
-	
-	public boolean showCertInfo() {
-		return showCertInfo;
-	}
-	
-	public boolean showKeyUsage() {
-		return showKeyUsage;
+	public PAdESCommand getPadesCommand() {
+		return padesCommand;
 	}
 
 	public ArgsParser() {
 		jCommander = new JCommander(this);
 		jCommander.setProgramName("PKCS#11 Digital Signature Tool");
+		cadesCommand = new CAdESCommand();
+		padesCommand = new PAdESCommand();
+		jCommander.addCommand(cadesCommandLabel, cadesCommand);
+		jCommander.addCommand(padesCommandLabel, padesCommand);
 	}
 
-	public void parseArgs(String[] args) {
+	public String parseArgs(String[] args) {
 		jCommander.parse(args);
+		return jCommander.getParsedCommand();
+	}
+
+	public File getFileToSign() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(cadesCommandLabel))
+			return getCadesCommand().getFileToSign();
+		else if (command.equals(padesCommandLabel))
+			return getPadesCommand().getFileToSign();
+		return null;
+	}
+
+	public boolean getUseVisibleSignature() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(padesCommandLabel))
+			return getPadesCommand().getVisibleSignature();
+		return false;
+	}
+	
+	private CommonParam getCommand() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(cadesCommandLabel))
+			return getCadesCommand();
+		else if (command.equals(padesCommandLabel))
+			return getPadesCommand();
+		return null;
+	}
+	
+	private boolean isCAdES(){
+		String command = jCommander.getParsedCommand();
+		if(command.equals(ArgsParser.cadesCommandLabel))
+			return true;
+		return false;
+	}
+	
+	private boolean isPAdES(){
+		String command = jCommander.getParsedCommand();
+		if(command.equals(ArgsParser.padesCommandLabel))
+			return true;
+		return false;
+	}
+	
+	public SignFormat checkSelectedSignFormat() {
+		if (isCAdES() == false && isPAdES() == false)
+			return null;
+		else if (isCAdES()) {
+			return SignFormat.CADES;
+		} else if (isPAdES()) {
+			return SignFormat.PADES;
+		}
+		return null;
+	}
+	
+	public boolean isHelp() {
+		return getCommand().isHelp();
+	}
+
+	public File getDriver() {
+		return getCommand().getDriver();
+	}
+
+	public boolean showCertInfo() {
+		return getCommand().showCertInfo();
+	}
+
+	public boolean showKeyUsage() {
+		return getCommand().showKeyUsage();
 	}
 
 	public void showHelp() {
-		// jCommander.usage();
-		List<ParameterDescription> parameters = jCommander.getParameters();
-		Comparator<? super ParameterDescription> parameterDescriptionComparator = jCommander
-				.getParameterDescriptionComparator();
-		parameters.sort(parameterDescriptionComparator);
-		System.out.println("Usage:" + jCommander.getProgramDisplayName());
-		System.out.println("  Options:");
-		for (ParameterDescription parameterDescription : parameters) {
-			System.out.println("    " + parameterDescription.getNames().toString());
-			System.out.println("\t" + parameterDescription.getDescription().toString());
-		}
+		jCommander.usage();
+		// List<ParameterDescription> parameters = jCommander.getParameters();
+		// Comparator<? super ParameterDescription> parameterDescriptionComparator =
+		// jCommander
+		// .getParameterDescriptionComparator();
+		// parameters.sort(parameterDescriptionComparator);
+		// System.out.println("Usage:" + jCommander.getProgramDisplayName());
+		// System.out.println(" Options:");
+		// for (ParameterDescription parameterDescription : parameters) {
+		// System.out.println(" " + parameterDescription.getNames().toString());
+		// System.out.println("\t" + parameterDescription.getDescription().toString());
+		// }
 	}
-
-	
 
 	/************************
 	 ****** Converter *******
@@ -110,4 +200,5 @@ public class ArgsParser {
 			return new File(value);
 		}
 	}
+
 }

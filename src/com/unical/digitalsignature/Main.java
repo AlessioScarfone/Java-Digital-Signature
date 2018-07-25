@@ -48,7 +48,8 @@ public class Main {
 		try {
 			cmdr.parseArgs(args);
 		} catch (ParameterException e) {
-			System.err.println("Missing Parameter");
+			System.err.println("Parameter Error:");
+			System.err.println(e.getMessage());
 			return;
 		}
 		// Show help
@@ -74,16 +75,16 @@ public class Main {
 
 		// check selected sign format
 		if (!checkSelectedSignFormat(cmdr)) {
-			System.err.println("PAdES and CAdES are mutually exclusive. Select only one please.");
+			System.err.println("Select (only) one between PAdES and CAdES.");
 			return;
 		}
-
+		
 		File inputFile = cmdr.getFileToSign();
-
 		if (inputFile == null) {
 			System.err.println("No File input");
 			return;
 		}
+		
 		// check file to sign format
 		if (!checkFile(inputFile))
 			return;
@@ -91,19 +92,13 @@ public class Main {
 		sign(inputFile, cmdr.getUseVisibleSignature());
 
 	}
-
+	
+	
+	
 	private static boolean checkSelectedSignFormat(ArgsParser cmdr) {
-		if (cmdr.isCAdES() && cmdr.isPAdES())
+		selectedSignFormat = cmdr.checkSelectedSignFormat();
+		if(selectedSignFormat == null)
 			return false;
-		else if (cmdr.isCAdES()) {
-			selectedSignFormat = SignFormat.CADES;
-		} else if (cmdr.isPAdES()) {
-			selectedSignFormat = SignFormat.PADES;
-		} else {
-			selectedSignFormat = SignFormat.CADES;
-			System.out.println("Sign Format not provided. Use default format");
-		}
-
 		System.out.println("Selected Sign Format: " + selectedSignFormat.toString());
 		return true;
 	}
@@ -135,7 +130,8 @@ public class Main {
 				count++;
 			}
 		} catch (DSSException e) {
-			System.err.println("Token access failed.");
+			System.err.println("Token access failed:");
+			System.err.println(e.getMessage());
 			// e.printStackTrace();
 			return;
 		}
