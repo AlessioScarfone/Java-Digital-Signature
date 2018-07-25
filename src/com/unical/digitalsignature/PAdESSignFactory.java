@@ -5,28 +5,35 @@ import java.awt.Font;
 import java.io.File;
 
 import com.google.common.io.Files;
+import com.unical.utils.PAdESProp;
 
 import eu.europa.esig.dss.AbstractSignatureParameters;
+import eu.europa.esig.dss.DSSASN1Utils;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DigestAlgorithm;
+import eu.europa.esig.dss.FileDocument;
 import eu.europa.esig.dss.SignatureLevel;
 import eu.europa.esig.dss.pades.PAdESSignatureParameters;
 import eu.europa.esig.dss.pades.SignatureImageParameters;
+import eu.europa.esig.dss.pades.SignatureImageParameters.VisualSignatureAlignmentHorizontal;
+import eu.europa.esig.dss.pades.SignatureImageParameters.VisualSignatureAlignmentVertical;
+import eu.europa.esig.dss.pades.SignatureImageParameters.VisualSignatureRotation;
 import eu.europa.esig.dss.pades.SignatureImageTextParameters;
 import eu.europa.esig.dss.pades.signature.PAdESService;
 import eu.europa.esig.dss.signature.AbstractSignatureService;
 import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
+import eu.europa.esig.dss.x509.CertificateToken;
 
-public class PAdESSignFactory extends AbstractSignFactory{
-	
-	private boolean visibleSignature = false;
+public class PAdESSignFactory extends AbstractSignFactory {
 
-	public PAdESSignFactory(boolean useVisibleSignature) {
-		visibleSignature = useVisibleSignature;
-	}
-	
+	private PAdESProp prop;
+
 	public PAdESSignFactory() {
+	}
+
+	public PAdESSignFactory(PAdESProp padesProp) {
+		prop = padesProp;
 	}
 
 	public AbstractSignatureParameters setParameter(DSSPrivateKeyEntry signer) {
@@ -39,25 +46,43 @@ public class PAdESSignFactory extends AbstractSignFactory{
 		parameters.setDigestAlgorithm(DigestAlgorithm.SHA256);
 		// We set the signing certificate
 		parameters.setSigningCertificate(signer.getCertificate());
-		if(visibleSignature)
-			parameters.setSignatureImageParameters(addImageParameters());
-		
+		if (prop.getUse()) {
+			CertificateToken ct = signer.getCertificate();
+			String humanReadableSigner = DSSASN1Utils.getHumanReadableName(ct);
+			parameters.setSignatureImageParameters(addImageParameters(humanReadableSigner, prop));
+		}
+
 		return parameters;
 	}
-	
-	private SignatureImageParameters addImageParameters() {
+
+	private SignatureImageParameters addImageParameters(String humanReadableSigner, PAdESProp prop) {
+		//TODO: user can select position of the sign
+		
 		// Initialize visual signature
 		SignatureImageParameters imageParameters = new SignatureImageParameters();
 		// the origin is the left and top corner of the page
-		imageParameters.setxAxis(0);
-		imageParameters.setyAxis(0);
+
+		imageParameters.setPage(1);
+		imageParameters.setRotation(VisualSignatureRotation.AUTOMATIC);
+		imageParameters.setAlignmentHorizontal(VisualSignatureAlignmentHorizontal.LEFT);
+		imageParameters.setAlignmentVertical(VisualSignatureAlignmentVertical.BOTTON);
+
+		if (prop.getFile().exists()) {
+			//TODO: check if the file is a png,jpg ecc
+			imageParameters.setImage(new FileDocument(prop.getFile()));
+		} else {
+			System.err.println("Image not exist. Sign only with text.\n");
+		}
+		// imageParameters.setxAxis(0);
+		// imageParameters.setyAxis(0);
+
 		// Initialize text to generate for visual signature
 		SignatureImageTextParameters textParameters = new SignatureImageTextParameters();
-		textParameters.setFont(new Font("serif", Font.PLAIN, 14));
-		textParameters.setTextColor(Color.BLUE);
-		textParameters.setText("My visual signature");
-		imageParameters.setTextParameters(textParameters);	
-		
+		textParameters.setFont(new Font("serif", Font.PLAIN, 13));
+		textParameters.setTextColor(Color.BLACK);
+		textParameters.setText(humanReadableSigner);
+		imageParameters.setTextParameters(textParameters);
+
 		return imageParameters;
 	}
 
@@ -69,7 +94,7 @@ public class PAdESSignFactory extends AbstractSignFactory{
 		PAdESService service = new PAdESService(commonCertificateVerifier);
 		return service;
 	}
-	
+
 	@Override
 	public void createSignedFile(DSSDocument signedDocument, File inputFile) {
 		String newfilename = Files.getNameWithoutExtension(inputFile.getName()) + "-signed.pdf";
@@ -83,10 +108,7 @@ public class PAdESSignFactory extends AbstractSignFactory{
 		if (dir == null)
 			dir = ".";
 
-		writeFile(dir,newfilename,signedDocument);
+		writeFile(dir, newfilename, signedDocument);
 	}
-
-
-	
 
 }

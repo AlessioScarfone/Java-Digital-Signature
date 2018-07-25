@@ -18,23 +18,23 @@ public class ArgsParser {
 	/************************
 	 **** CLI Parameters ****
 	 ************************/
-	
+
 	/*
 	 * Class that contain the common parameters of all command
 	 */
 	private class CommonParam {
+		@Parameter(names = { "-h", "--help" }, description = "show usage", help = true, order = 0)
+		private boolean help = false;
+
 		@Parameter(names = { "-d",
 				"--driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1, order = 1)
 		private File driver;
 
-		@Parameter(names = { "-i", "--info-certificates" }, description = "show certificates info", order = 3)
-		private boolean showCertInfo;
-
 		@Parameter(names = { "-u", "--key-usage" }, description = "show key usage", order = 2)
 		private boolean showKeyUsage;
 
-		@Parameter(names = { "-h", "--help" }, help = true, order = 0)
-		private boolean help = false;
+		@Parameter(names = { "-i", "--info-certificates" }, description = "show certificates info", order = 3)
+		private boolean showCertInfo;
 
 		public boolean isHelp() {
 			return help;
@@ -54,6 +54,7 @@ public class ArgsParser {
 	}
 
 	private CAdESCommand cadesCommand;
+
 	@Parameters(commandDescription = "CAdES sign format")
 	public class CAdESCommand extends CommonParam {
 		@Parameter(description = "FileToSign", converter = FileConverter.class)
@@ -69,11 +70,16 @@ public class ArgsParser {
 	@Parameters(commandDescription = "PAdES sign format")
 	public class PAdESCommand extends CommonParam {
 
-		@Parameter(description = "FileToSign", converter = FileConverter.class, arity = 1)
+		@Parameter(description = "FileToSign", converter = FileConverter.class, arity = 1, order = 5)
 		private File fileToSign;
 
-		@Parameter(names = { "-v", "--visible-signature" }, description = "Add Visible signature ", arity = 0)
+		@Parameter(names = { "-v",
+				"--visible-signature" }, description = "Add Visible Signature - Only Text ", arity = 0, order = 6)
 		private boolean useVisibleSignature;
+
+		@Parameter(names = { "-vi",
+				"--visible-signature-image" }, description = "Add Visible Signature - Text and Image ", arity = 1, order = 7)
+		private File visibleSignatureImage;
 
 		public File getFileToSign() {
 			return fileToSign;
@@ -81,6 +87,10 @@ public class ArgsParser {
 
 		public boolean getVisibleSignature() {
 			return useVisibleSignature;
+		}
+
+		public File getVisibleSignatureImage() {
+			return visibleSignatureImage;
 		}
 
 	}
@@ -116,13 +126,28 @@ public class ArgsParser {
 		return null;
 	}
 
+	public PAdESProp createPAdESProp() {
+		if (isPAdES())
+			return new PAdESProp(getUseVisibleSignature(), getUseVisibleSignatureImage());
+		return null;
+	}
+
 	public boolean getUseVisibleSignature() {
 		String command = jCommander.getParsedCommand();
-		if (command.equals(padesCommandLabel))
-			return getPadesCommand().getVisibleSignature();
+		if (command.equals(padesCommandLabel)) {
+			if (getPadesCommand().getVisibleSignature() || getPadesCommand().getVisibleSignatureImage() != null)
+				return true;
+		}
 		return false;
 	}
-	
+
+	public File getUseVisibleSignatureImage() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(padesCommandLabel))
+			return getPadesCommand().getVisibleSignatureImage();
+		return null;
+	}
+
 	private CommonParam getCommand() {
 		String command = jCommander.getParsedCommand();
 		if (command.equals(cadesCommandLabel))
@@ -131,21 +156,21 @@ public class ArgsParser {
 			return getPadesCommand();
 		return null;
 	}
-	
-	private boolean isCAdES(){
+
+	private boolean isCAdES() {
 		String command = jCommander.getParsedCommand();
-		if(command.equals(ArgsParser.cadesCommandLabel))
+		if (command.equals(ArgsParser.cadesCommandLabel))
 			return true;
 		return false;
 	}
-	
-	private boolean isPAdES(){
+
+	private boolean isPAdES() {
 		String command = jCommander.getParsedCommand();
-		if(command.equals(ArgsParser.padesCommandLabel))
+		if (command.equals(ArgsParser.padesCommandLabel))
 			return true;
 		return false;
 	}
-	
+
 	public SignFormat checkSelectedSignFormat() {
 		if (isCAdES() == false && isPAdES() == false)
 			return null;
@@ -156,7 +181,7 @@ public class ArgsParser {
 		}
 		return null;
 	}
-	
+
 	public boolean isHelp() {
 		return getCommand().isHelp();
 	}

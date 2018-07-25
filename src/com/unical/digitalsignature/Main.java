@@ -9,6 +9,7 @@ import com.beust.jcommander.ParameterException;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.unical.utils.ArgsParser;
+import com.unical.utils.PAdESProp;
 import com.unical.utils.Utility;
 
 import eu.europa.esig.dss.AbstractSignatureParameters;
@@ -48,8 +49,7 @@ public class Main {
 		try {
 			cmdr.parseArgs(args);
 		} catch (ParameterException e) {
-			System.err.println("Parameter Error:");
-			System.err.println(e.getMessage());
+			System.err.println("Parameter Error.");
 			return;
 		}
 		// Show help
@@ -89,7 +89,8 @@ public class Main {
 		if (!checkFile(inputFile))
 			return;
 
-		sign(inputFile, cmdr.getUseVisibleSignature());
+		
+		sign(inputFile,cmdr);
 
 	}
 	
@@ -130,15 +131,14 @@ public class Main {
 				count++;
 			}
 		} catch (DSSException e) {
-			System.err.println("Token access failed:");
-			System.err.println(e.getMessage());
+			System.err.println("Token access failed.");
 			// e.printStackTrace();
 			return;
 		}
 
 	}
 
-	private static void sign(File inputFile, boolean useVisibleSignature) {
+	private static void sign(File inputFile, ArgsParser cmdr) {
 		System.out.println("Start Signature Procedure");
 		char[] pass = Utility.getPassword();
 
@@ -148,7 +148,12 @@ public class Main {
 		if (selectedSignFormat == SignFormat.CADES) {
 			factory = new CAdESSignFactory();
 		} else if (selectedSignFormat == SignFormat.PADES) {
-			factory = new PAdESSignFactory(useVisibleSignature);
+			PAdESProp padesProp = cmdr.createPAdESProp();
+			if(padesProp == null) {
+				System.err.println("Error create PAdES Prop");
+				return;
+			}
+			factory = new PAdESSignFactory(padesProp);
 		}
 
 		Pkcs11SignatureToken token = factory.connectToToken(currentDriverPath, pass);
@@ -164,7 +169,8 @@ public class Main {
 		
 		System.out.println("Certificate to use:");
 		CertificateToken ct= signer.getCertificate();
-		System.out.println(DSSASN1Utils.getHumanReadableName(ct));
+		String humanReadableSigner = DSSASN1Utils.getHumanReadableName(ct);
+		System.out.println(humanReadableSigner);
 		
 		// Preparing parameters for the PAdES signature
 		AbstractSignatureParameters parameters = factory.setParameter(signer);
