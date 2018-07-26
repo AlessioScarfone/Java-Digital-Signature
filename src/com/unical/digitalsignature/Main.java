@@ -50,6 +50,7 @@ public class Main {
 			cmdr.parseArgs(args);
 		} catch (ParameterException | NullPointerException e) {
 			System.err.println("Parameter Error.");
+			e.printStackTrace();
 			return;
 		}
 		// Show help

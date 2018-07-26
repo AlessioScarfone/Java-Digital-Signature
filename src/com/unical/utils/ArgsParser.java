@@ -28,6 +28,24 @@ public class ArgsParser {
 	@Parameter(names = { "-h", "--help" }, description = "show usage", help = true, order = 0)
 	private boolean help = false;
 
+	@Parameter(names = { "-u", "--key-usage" }, description = "show key usage", order = 2)
+	private boolean showKeyUsage;
+
+	@Parameter(names = { "-i", "--info-certificates" }, description = "show certificates info", order = 3)
+	private boolean showCertInfo;
+
+	@Parameter(names = { "-d",
+			"--driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1, order = 1)
+	private File driver;
+
+	public boolean showCertInfo() {
+		return showCertInfo;
+	}
+
+	public boolean showKeyUsage() {
+		return showKeyUsage;
+	}
+
 	/*
 	 * Class that contain the common parameters of all command
 	 */
@@ -35,31 +53,17 @@ public class ArgsParser {
 		@Parameter(names = { "-h", "--help" }, description = "show usage", help = true, order = 0)
 		private boolean help = false;
 
-		@Parameter(names = { "-d",
-				"--driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1, order = 1)
-		private File driver;
-
-		@Parameter(names = { "-u", "--key-usage" }, description = "show key usage", order = 2)
-		private boolean showKeyUsage;
-
-		@Parameter(names = { "-i", "--info-certificates" }, description = "show certificates info", order = 3)
-		private boolean showCertInfo;
+//		@Parameter(names = { "-d",
+//				"--driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1, order = 1)
+//		private File driver;
 
 		public boolean isHelp() {
 			return help;
 		}
 
-		public File getDriver() {
-			return driver;
-		}
-
-		public boolean showCertInfo() {
-			return showCertInfo;
-		}
-
-		public boolean showKeyUsage() {
-			return showKeyUsage;
-		}
+//		public File getDriver() {
+//			return driver;
+//		}
 	}
 
 	private CAdESCommand cadesCommand;
@@ -203,10 +207,12 @@ public class ArgsParser {
 
 	private CommonParam getCommand() {
 		String command = jCommander.getParsedCommand();
-		if (command.equals(cadesCommandLabel))
-			return getCadesCommand();
-		else if (command.equals(padesCommandLabel))
-			return getPadesCommand();
+		if (command != null) {
+			if (command.equals(cadesCommandLabel))
+				return getCadesCommand();
+			else if (command.equals(padesCommandLabel))
+				return getPadesCommand();
+		}
 		return null;
 	}
 
@@ -236,19 +242,18 @@ public class ArgsParser {
 	}
 
 	public boolean isHelp() {
-		return (help || getCommand().isHelp());
+		if (help)
+			return true;
+		if (getCommand() != null)
+			return getCommand().isHelp();
+		return false;
 	}
 
 	public File getDriver() {
-		return getCommand().getDriver();
-	}
-
-	public boolean showCertInfo() {
-		return (getCommand().showCertInfo());
-	}
-
-	public boolean showKeyUsage() {
-		return (getCommand().showKeyUsage());
+//		if (getCommand() != null)
+//			return getCommand().getDriver();
+//		else
+			return driver;
 	}
 
 	public void showHelp() {
