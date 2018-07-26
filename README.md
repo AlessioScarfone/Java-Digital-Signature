@@ -9,6 +9,8 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
   Options:
     -h, --help
       show usage
+    -d, --driver
+      PKCS#11 Driver
     -u, --key-usage
       show key usage
     -i, --info-certificates
@@ -19,24 +21,12 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
         Options:
           -h, --help
             show usage
-          -d, --driver
-            PKCS#11 Driver
-          -u, --key-usage
-            show key usage
-          -i, --info-certificates
-            show certificates info
 
     pades      PAdES sign format
       Usage: pades [options] FileToSign
         Options:
           -h, --help
             show usage
-          -d, --driver
-            PKCS#11 Driver
-          -u, --key-usage
-            show key usage
-          -i, --info-certificates
-            show certificates info
           -v, --visible-signature
             add visible signature - only text
           -vi, --visible-signature-image
