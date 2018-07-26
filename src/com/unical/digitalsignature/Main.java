@@ -40,7 +40,7 @@ public class Main {
 	private static SignFormat selectedSignFormat = SignFormat.PADES;
 
 	public static void main(String[] args) {
-
+		
 		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 
 		// TODO hide warning also for dss.

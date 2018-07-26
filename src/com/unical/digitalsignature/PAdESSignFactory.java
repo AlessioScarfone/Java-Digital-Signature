@@ -3,6 +3,10 @@ package com.unical.digitalsignature;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 import com.google.common.io.Files;
 import com.unical.utils.PAdESProp;
@@ -47,10 +51,20 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		if (prop.getUseVisibleSign()) {
 			CertificateToken ct = signer.getCertificate();
 			String humanReadableSigner = DSSASN1Utils.getHumanReadableName(ct);
+			humanReadableSigner = humanReadableSigner+"\n"+getDataAndTimeString();
 			parameters.setSignatureImageParameters(addImageParameters(humanReadableSigner, prop));
 		}
 
 		return parameters;
+	}
+	
+	private String getDataAndTimeString() {
+		LocalDateTime ldt = LocalDateTime.now();
+		LocalTime localTime = ldt.toLocalTime().truncatedTo(ChronoUnit.SECONDS);
+		LocalDate localDate = ldt.toLocalDate();
+		String s = localDate.toString()+" "+localTime.toString();
+		return s;
+		
 	}
 
 	private SignatureImageParameters addImageParameters(String humanReadableSigner, PAdESProp prop) {
@@ -60,7 +74,8 @@ public class PAdESSignFactory extends AbstractSignFactory {
 
 		imageParameters.setPage(1);
 		imageParameters.setRotation(VisualSignatureRotation.AUTOMATIC);
-//		System.out.println(prop.toString());
+		// System.out.println(prop.toString());
+		// TODO find signature field and use these
 		imageParameters.setAlignmentHorizontal(prop.getPosHorizontal());
 		imageParameters.setAlignmentVertical(prop.getPosVertical());
 		if (prop.getImageFile() != null) {

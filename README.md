@@ -40,7 +40,6 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
 
 ```
 
-
 -----
 #### Dependencies: 
 

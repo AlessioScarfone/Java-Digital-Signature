@@ -53,17 +53,18 @@ public class ArgsParser {
 		@Parameter(names = { "-h", "--help" }, description = "show usage", help = true, order = 0)
 		private boolean help = false;
 
-//		@Parameter(names = { "-d",
-//				"--driver" }, converter = FileConverter.class, description = "PKCS#11 Driver", required = false, arity = 1, order = 1)
-//		private File driver;
+		// @Parameter(names = { "-d",
+		// "--driver" }, converter = FileConverter.class, description = "PKCS#11
+		// Driver", required = false, arity = 1, order = 1)
+		// private File driver;
 
 		public boolean isHelp() {
 			return help;
 		}
 
-//		public File getDriver() {
-//			return driver;
-//		}
+		// public File getDriver() {
+		// return driver;
+		// }
 	}
 
 	private CAdESCommand cadesCommand;
@@ -115,23 +116,27 @@ public class ArgsParser {
 		}
 
 		public VisualSignatureAlignmentVertical getPosVertical() {
-			if (posV.equalsIgnoreCase("Top") || posV.equalsIgnoreCase("T"))
-				return SignatureImageParameters.VisualSignatureAlignmentVertical.TOP;
-			else if (posV.equalsIgnoreCase("Middle") || posV.equalsIgnoreCase("M"))
-				return SignatureImageParameters.VisualSignatureAlignmentVertical.MIDDLE;
-			else if (posV.equalsIgnoreCase("Bottom") || posV.equalsIgnoreCase("B"))
-				return SignatureImageParameters.VisualSignatureAlignmentVertical.BOTTON;
+			if (posV != null) {
+				if (posV.equalsIgnoreCase("Top") || posV.equalsIgnoreCase("T"))
+					return SignatureImageParameters.VisualSignatureAlignmentVertical.TOP;
+				else if (posV.equalsIgnoreCase("Middle") || posV.equalsIgnoreCase("M"))
+					return SignatureImageParameters.VisualSignatureAlignmentVertical.MIDDLE;
+				else if (posV.equalsIgnoreCase("Bottom") || posV.equalsIgnoreCase("B"))
+					return SignatureImageParameters.VisualSignatureAlignmentVertical.BOTTON;
+			}
 			return null;
 
 		}
 
 		public VisualSignatureAlignmentHorizontal getPosHorizontal() {
-			if (posH.equalsIgnoreCase("Left") || posH.equalsIgnoreCase("L"))
-				return SignatureImageParameters.VisualSignatureAlignmentHorizontal.LEFT;
-			else if (posH.equalsIgnoreCase("Right") || posH.equalsIgnoreCase("R"))
-				return SignatureImageParameters.VisualSignatureAlignmentHorizontal.RIGHT;
-			else if (posH.equalsIgnoreCase("Center") || posH.equalsIgnoreCase("C"))
-				return SignatureImageParameters.VisualSignatureAlignmentHorizontal.CENTER;
+			if (posH != null) {
+				if (posH.equalsIgnoreCase("Left") || posH.equalsIgnoreCase("L"))
+					return SignatureImageParameters.VisualSignatureAlignmentHorizontal.LEFT;
+				else if (posH.equalsIgnoreCase("Right") || posH.equalsIgnoreCase("R"))
+					return SignatureImageParameters.VisualSignatureAlignmentHorizontal.RIGHT;
+				else if (posH.equalsIgnoreCase("Center") || posH.equalsIgnoreCase("C"))
+					return SignatureImageParameters.VisualSignatureAlignmentHorizontal.CENTER;
+			}
 			return null;
 		}
 
@@ -250,10 +255,10 @@ public class ArgsParser {
 	}
 
 	public File getDriver() {
-//		if (getCommand() != null)
-//			return getCommand().getDriver();
-//		else
-			return driver;
+		// if (getCommand() != null)
+		// return getCommand().getDriver();
+		// else
+		return driver;
 	}
 
 	public void showHelp() {
