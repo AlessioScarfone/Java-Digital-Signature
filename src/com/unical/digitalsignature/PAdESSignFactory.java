@@ -15,8 +15,6 @@ import eu.europa.esig.dss.FileDocument;
 import eu.europa.esig.dss.SignatureLevel;
 import eu.europa.esig.dss.pades.PAdESSignatureParameters;
 import eu.europa.esig.dss.pades.SignatureImageParameters;
-import eu.europa.esig.dss.pades.SignatureImageParameters.VisualSignatureAlignmentHorizontal;
-import eu.europa.esig.dss.pades.SignatureImageParameters.VisualSignatureAlignmentVertical;
 import eu.europa.esig.dss.pades.SignatureImageParameters.VisualSignatureRotation;
 import eu.europa.esig.dss.pades.SignatureImageTextParameters;
 import eu.europa.esig.dss.pades.signature.PAdESService;
@@ -46,7 +44,7 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		parameters.setDigestAlgorithm(DigestAlgorithm.SHA256);
 		// We set the signing certificate
 		parameters.setSigningCertificate(signer.getCertificate());
-		if (prop.getUse()) {
+		if (prop.getUseVisibleSign()) {
 			CertificateToken ct = signer.getCertificate();
 			String humanReadableSigner = DSSASN1Utils.getHumanReadableName(ct);
 			parameters.setSignatureImageParameters(addImageParameters(humanReadableSigner, prop));
@@ -56,22 +54,22 @@ public class PAdESSignFactory extends AbstractSignFactory {
 	}
 
 	private SignatureImageParameters addImageParameters(String humanReadableSigner, PAdESProp prop) {
-		//TODO: user can select position of the sign
-		
 		// Initialize visual signature
 		SignatureImageParameters imageParameters = new SignatureImageParameters();
 		// the origin is the left and top corner of the page
 
 		imageParameters.setPage(1);
 		imageParameters.setRotation(VisualSignatureRotation.AUTOMATIC);
-		imageParameters.setAlignmentHorizontal(VisualSignatureAlignmentHorizontal.LEFT);
-		imageParameters.setAlignmentVertical(VisualSignatureAlignmentVertical.BOTTON);
-
-		if (prop.getFile().exists()) {
-			//TODO: check if the file is a png,jpg ecc
-			imageParameters.setImage(new FileDocument(prop.getFile()));
-		} else {
-			System.err.println("Image not exist. Sign only with text.\n");
+		System.out.println(prop.toString());
+		imageParameters.setAlignmentHorizontal(prop.getPosHorizontal());
+		imageParameters.setAlignmentVertical(prop.getPosVertical());
+		if (prop.getImageFile() != null) {
+			if (prop.getImageFile().exists()) {
+				// TODO: check if the file is a png,jpg ecc
+				imageParameters.setImage(new FileDocument(prop.getImageFile()));
+			} else {
+				System.err.println("Image not exist. Sign only with text.\n");
+			}
 		}
 		// imageParameters.setxAxis(0);
 		// imageParameters.setyAxis(0);

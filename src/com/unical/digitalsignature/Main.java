@@ -48,7 +48,7 @@ public class Main {
 		ArgsParser cmdr = new ArgsParser();
 		try {
 			cmdr.parseArgs(args);
-		} catch (ParameterException e) {
+		} catch (ParameterException | NullPointerException e) {
 			System.err.println("Parameter Error.");
 			return;
 		}

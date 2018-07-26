@@ -8,6 +8,10 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.unical.digitalsignature.SignFormat;
 
+import eu.europa.esig.dss.pades.SignatureImageParameters;
+import eu.europa.esig.dss.pades.SignatureImageParameters.VisualSignatureAlignmentHorizontal;
+import eu.europa.esig.dss.pades.SignatureImageParameters.VisualSignatureAlignmentVertical;
+
 public class ArgsParser {
 
 	private JCommander jCommander;
@@ -20,7 +24,13 @@ public class ArgsParser {
 	 ************************/
 	@Parameter(names = { "-h", "--help" }, description = "show usage", help = true, order = 0)
 	private boolean help = false;
-	
+
+	@Parameter(names = { "-u", "--key-usage" }, description = "show key usage", order = 2)
+	private boolean showKeyUsage;
+
+	@Parameter(names = { "-i", "--info-certificates" }, description = "show certificates info", order = 3)
+	private boolean showCertInfo;
+
 	/*
 	 * Class that contain the common parameters of all command
 	 */
@@ -83,6 +93,14 @@ public class ArgsParser {
 				"--visible-signature-image" }, description = "add visible signature - text and image ", arity = 1, order = 7)
 		private File visibleSignatureImage;
 
+		@Parameter(names = { "-pv",
+				"--vertical-signature-position" }, description = "vertical position of visible signature: T(op) - M(iddle) - B(ottom)", arity = 1, order = 8)
+		private String posV;
+
+		@Parameter(names = { "-ph",
+				"--horizontal-signature-position" }, description = "horizontal position of visible signature: L(eft) - C(enter) - R(ight)", arity = 1, order = 9)
+		private String posH;
+
 		public File getFileToSign() {
 			return fileToSign;
 		}
@@ -93,6 +111,27 @@ public class ArgsParser {
 
 		public File getVisibleSignatureImage() {
 			return visibleSignatureImage;
+		}
+
+		public VisualSignatureAlignmentVertical getPosVertical() {
+			if (posV.equalsIgnoreCase("Top") || posV.equalsIgnoreCase("T"))
+				return SignatureImageParameters.VisualSignatureAlignmentVertical.TOP;
+			else if (posV.equalsIgnoreCase("Middle") || posV.equalsIgnoreCase("M"))
+				return SignatureImageParameters.VisualSignatureAlignmentVertical.MIDDLE;
+			else if (posV.equalsIgnoreCase("Bottom") || posV.equalsIgnoreCase("B"))
+				return SignatureImageParameters.VisualSignatureAlignmentVertical.BOTTON;
+			return null;
+
+		}
+
+		public VisualSignatureAlignmentHorizontal getPosHorizontal() {
+			if (posH.equalsIgnoreCase("Left") || posH.equalsIgnoreCase("L"))
+				return SignatureImageParameters.VisualSignatureAlignmentHorizontal.LEFT;
+			else if (posH.equalsIgnoreCase("Right") || posH.equalsIgnoreCase("R"))
+				return SignatureImageParameters.VisualSignatureAlignmentHorizontal.RIGHT;
+			else if (posH.equalsIgnoreCase("Center") || posH.equalsIgnoreCase("C"))
+				return SignatureImageParameters.VisualSignatureAlignmentHorizontal.CENTER;
+			return null;
 		}
 
 	}
@@ -130,7 +169,8 @@ public class ArgsParser {
 
 	public PAdESProp createPAdESProp() {
 		if (isPAdES())
-			return new PAdESProp(getUseVisibleSignature(), getUseVisibleSignatureImage());
+			return new PAdESProp(getUseVisibleSignature(), getUseVisibleSignatureImage(), getHorizontalAlignment(),
+					getVerticalAlignment());
 		return null;
 	}
 
@@ -147,6 +187,20 @@ public class ArgsParser {
 		String command = jCommander.getParsedCommand();
 		if (command.equals(padesCommandLabel))
 			return getPadesCommand().getVisibleSignatureImage();
+		return null;
+	}
+
+	public VisualSignatureAlignmentVertical getVerticalAlignment() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(padesCommandLabel))
+			return getPadesCommand().getPosVertical();
+		return null;
+	}
+
+	public VisualSignatureAlignmentHorizontal getHorizontalAlignment() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(padesCommandLabel))
+			return getPadesCommand().getPosHorizontal();
 		return null;
 	}
 
@@ -185,7 +239,7 @@ public class ArgsParser {
 	}
 
 	public boolean isHelp() {
-		return (help || getCommand().isHelp() );
+		return (help || getCommand().isHelp());
 	}
 
 	public File getDriver() {
@@ -193,11 +247,11 @@ public class ArgsParser {
 	}
 
 	public boolean showCertInfo() {
-		return getCommand().showCertInfo();
+		return (showCertInfo || getCommand().showCertInfo());
 	}
 
 	public boolean showKeyUsage() {
-		return getCommand().showKeyUsage();
+		return (showKeyUsage || getCommand().showKeyUsage());
 	}
 
 	public void showHelp() {
