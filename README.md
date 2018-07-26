@@ -9,6 +9,10 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
   Options:
     -h, --help
       show usage
+    -u, --key-usage
+      show key usage
+    -i, --info-certificates
+      show certificates info
   Commands:
     cades      CAdES sign format
       Usage: cades [options] FileToSign
@@ -37,7 +41,13 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
             add visible signature - only text
           -vi, --visible-signature-image
             add visible signature - text and image
-    
+          -pv, --vertical-signature-position
+            vertical position of visible signature: T(op) - M(iddle) - 
+            B(ottom) 
+          -ph, --horizontal-signature-position
+            horizontal position of visible signature: L(eft) - C(enter) - 
+            R(ight) 
+
 ```
 
 
