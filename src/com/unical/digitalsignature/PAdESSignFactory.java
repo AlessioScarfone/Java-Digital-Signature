@@ -51,14 +51,14 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		if (prop.getUseVisibleSign()) {
 			CertificateToken ct = signer.getCertificate();
 			String humanReadableSigner = DSSASN1Utils.getHumanReadableName(ct);
-			humanReadableSigner = humanReadableSigner+"\n"+getDataAndTimeString();
+			humanReadableSigner = humanReadableSigner+"\n"+getDateAndTimeString();
 			parameters.setSignatureImageParameters(addImageParameters(humanReadableSigner, prop));
 		}
 
 		return parameters;
 	}
 	
-	private String getDataAndTimeString() {
+	private String getDateAndTimeString() {
 		LocalDateTime ldt = LocalDateTime.now();
 		LocalTime localTime = ldt.toLocalTime().truncatedTo(ChronoUnit.SECONDS);
 		LocalDate localDate = ldt.toLocalDate();
