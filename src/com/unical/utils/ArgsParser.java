@@ -1,10 +1,13 @@
 package com.unical.utils;
 
 import java.io.File;
+import java.util.Comparator;
+import java.util.List;
 
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterDescription;
 import com.beust.jcommander.Parameters;
 import com.unical.digitalsignature.SignFormat;
 
@@ -24,12 +27,6 @@ public class ArgsParser {
 	 ************************/
 	@Parameter(names = { "-h", "--help" }, description = "show usage", help = true, order = 0)
 	private boolean help = false;
-
-	@Parameter(names = { "-u", "--key-usage" }, description = "show key usage", order = 2)
-	private boolean showKeyUsage;
-
-	@Parameter(names = { "-i", "--info-certificates" }, description = "show certificates info", order = 3)
-	private boolean showCertInfo;
 
 	/*
 	 * Class that contain the common parameters of all command
@@ -247,26 +244,32 @@ public class ArgsParser {
 	}
 
 	public boolean showCertInfo() {
-		return (showCertInfo || getCommand().showCertInfo());
+		return (getCommand().showCertInfo());
 	}
 
 	public boolean showKeyUsage() {
-		return (showKeyUsage || getCommand().showKeyUsage());
+		return (getCommand().showKeyUsage());
 	}
 
 	public void showHelp() {
-		jCommander.usage();
-		// List<ParameterDescription> parameters = jCommander.getParameters();
-		// Comparator<? super ParameterDescription> parameterDescriptionComparator =
-		// jCommander
-		// .getParameterDescriptionComparator();
-		// parameters.sort(parameterDescriptionComparator);
-		// System.out.println("Usage:" + jCommander.getProgramDisplayName());
-		// System.out.println(" Options:");
-		// for (ParameterDescription parameterDescription : parameters) {
-		// System.out.println(" " + parameterDescription.getNames().toString());
-		// System.out.println("\t" + parameterDescription.getDescription().toString());
-		// }
+		List<ParameterDescription> parameters = null;
+		if (help) {
+			jCommander.usage();
+			return;
+		} else if (isCAdES() && getCommand().isHelp()) {
+			parameters = jCommander.getCommands().get(cadesCommandLabel).getParameters();
+		} else if (isPAdES() && getCommand().isHelp()) {
+			parameters = jCommander.getCommands().get(padesCommandLabel).getParameters();
+		}
+		Comparator<? super ParameterDescription> parameterDescriptionComparator = jCommander
+				.getParameterDescriptionComparator();
+		parameters.sort(parameterDescriptionComparator);
+		System.out.println("Usage:" + jCommander.getProgramDisplayName());
+		System.out.println(" Options:");
+		for (ParameterDescription parameterDescription : parameters) {
+			System.out.println(" " + parameterDescription.getNames().toString());
+			System.out.println("\t" + parameterDescription.getDescription().toString());
+		}
 	}
 
 	/************************

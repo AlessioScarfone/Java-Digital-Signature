@@ -60,7 +60,7 @@ public class PAdESSignFactory extends AbstractSignFactory {
 
 		imageParameters.setPage(1);
 		imageParameters.setRotation(VisualSignatureRotation.AUTOMATIC);
-		System.out.println(prop.toString());
+//		System.out.println(prop.toString());
 		imageParameters.setAlignmentHorizontal(prop.getPosHorizontal());
 		imageParameters.setAlignmentVertical(prop.getPosVertical());
 		if (prop.getImageFile() != null) {
