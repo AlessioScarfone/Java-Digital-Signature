@@ -3,6 +3,7 @@ package com.unical.digitalsignature;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -59,10 +60,10 @@ public class PAdESSignFactory extends AbstractSignFactory {
 	}
 	
 	private String getDateAndTimeString() {
-		LocalDateTime ldt = LocalDateTime.now();
+		LocalDateTime ldt = LocalDateTime.now(Clock.systemUTC());
 		LocalTime localTime = ldt.toLocalTime().truncatedTo(ChronoUnit.SECONDS);
 		LocalDate localDate = ldt.toLocalDate();
-		String s = localDate.toString()+" "+localTime.toString();
+		String s = localDate.toString()+" "+localTime.toString()+" UTC";
 		return s;
 		
 	}
