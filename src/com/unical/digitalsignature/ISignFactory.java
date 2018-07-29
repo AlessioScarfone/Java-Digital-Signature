@@ -20,10 +20,10 @@ public interface ISignFactory {
 
 	public void showCertificateData(CertificateToken ct);
 
-	public AbstractSignatureParameters setParameter(DSSPrivateKeyEntry signer);
+	public AbstractSignatureParameters createParameter(DSSPrivateKeyEntry signer);
 
 	public AbstractSignatureService<?> createService();
 
-	public void createSignedFile(DSSDocument signedDocument, File inputFile);
+	public void createSignedFile(DSSDocument signedDocument);
 
 }

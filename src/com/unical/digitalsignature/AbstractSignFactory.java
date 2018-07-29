@@ -15,6 +15,12 @@ import eu.europa.esig.dss.utils.Utils;
 import eu.europa.esig.dss.x509.CertificateToken;
 
 public abstract class AbstractSignFactory implements ISignFactory {
+	
+	protected File inputFile;
+	
+	public AbstractSignFactory(File inputFile) {
+		this.inputFile = inputFile;
+	}
 
 	@Override
 	public Pkcs11SignatureToken connectToToken(File driverPath, char[] pass) {

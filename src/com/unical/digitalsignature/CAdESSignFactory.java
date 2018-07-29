@@ -17,7 +17,11 @@ import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 
 public class CAdESSignFactory extends AbstractSignFactory {
 	
-	public AbstractSignatureParameters setParameter(DSSPrivateKeyEntry signer) {
+	public CAdESSignFactory(File inputFile) {
+		super(inputFile);
+	}
+
+	public AbstractSignatureParameters createParameter(DSSPrivateKeyEntry signer) {
 		CAdESSignatureParameters parameters = new CAdESSignatureParameters();
 		parameters.setSignatureLevel(SignatureLevel.CAdES_BASELINE_B);
 
@@ -44,7 +48,7 @@ public class CAdESSignFactory extends AbstractSignFactory {
 	}
 
 	@Override
-	public void createSignedFile(DSSDocument signedDocument, File inputFile) {
+	public void createSignedFile(DSSDocument signedDocument) {
 		String newfilename = inputFile.getName() + ".p7m";
 		int c = 1;
 		while (new File(newfilename).exists()) {

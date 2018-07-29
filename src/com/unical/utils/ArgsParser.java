@@ -96,11 +96,11 @@ public class ArgsParser {
 		private File visibleSignatureImage;
 
 		@Parameter(names = { "-pv",
-				"--vertical-signature-position" }, description = "vertical position of visible signature: T(op) - M(iddle) - B(ottom)", arity = 1, order = 8)
+				"--vertical-signature-position" }, description = "vertical position of visible signature: T(op) - M(iddle) - B(ottom) [If a field is selected this option is ignored]", arity = 1, order = 8)
 		private String posV;
 
 		@Parameter(names = { "-ph",
-				"--horizontal-signature-position" }, description = "horizontal position of visible signature: L(eft) - C(enter) - R(ight)", arity = 1, order = 9)
+				"--horizontal-signature-position" }, description = "horizontal position of visible signature: L(eft) - C(enter) - R(ight) [If a field is selected this option is ignored]", arity = 1, order = 9)
 		private String posH;
 
 		public File getFileToSign() {

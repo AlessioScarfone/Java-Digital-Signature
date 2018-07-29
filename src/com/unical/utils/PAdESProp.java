@@ -11,7 +11,12 @@ public class PAdESProp {
 	private File imageFile = null;
 	
 	private VisualSignatureAlignmentHorizontal posH = VisualSignatureAlignmentHorizontal.LEFT; 
-	private VisualSignatureAlignmentVertical posV = VisualSignatureAlignmentVertical.BOTTON; 
+	private VisualSignatureAlignmentVertical posV = VisualSignatureAlignmentVertical.BOTTON;
+	
+	private float posX = 0;
+	private float posY = 0;
+	
+	private int page = 1; //page start from 1
 	
 	public PAdESProp(boolean use, File file,VisualSignatureAlignmentHorizontal posHor,VisualSignatureAlignmentVertical posVer) {
 		super();
@@ -23,7 +28,7 @@ public class PAdESProp {
 			this.posV = posVer;
 	}
 
-	public boolean getUseVisibleSign() {
+	public boolean useVisibleSign() {
 		return useVisibileSign;
 	}
 
@@ -39,16 +44,37 @@ public class PAdESProp {
 		return posV;
 	}
 	
-	
+	public float getPosX() {
+		return posX;
+	}
+
+	public void setPosX(float posX) {
+		this.posX = posX;
+	}
+
+	public float getPosY() {
+		return posY;
+	}
+
+	public void setPosY(float posY) {
+		this.posY = posY;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
 	@Override
 	public String toString() {
-		String s= "Use Visible Sign:"+getUseVisibleSign()+"\nHorizontal pos:"+
-				getPosHorizontal().toString()+"\nVerticalPos:"+getPosVertical().toString();
-		if(getImageFile() != null)
-			s=s+"\nImage File:"+getImageFile().toString();
-		
-		return s;
+		return "PAdESProp [useVisibileSign=" + useVisibileSign + ", imageFile=" + imageFile + ", posH=" + posH
+				+ ", posV=" + posV + ", posX=" + posX + ", posY=" + posY + ", page=" + page + "]";
 	}
+	
+	
 	
 	
 	

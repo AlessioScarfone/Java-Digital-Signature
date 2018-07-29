@@ -107,7 +107,7 @@ public class Main {
 
 	private static void showInfo(boolean info, boolean keyusage) {
 		char[] pass = Utility.getPassword();
-		AbstractSignFactory factory = new CAdESSignFactory();
+		AbstractSignFactory factory = new CAdESSignFactory(null); //no file is needed
 		Pkcs11SignatureToken token = factory.connectToToken(currentDriverPath, pass);
 		List<DSSPrivateKeyEntry> keys;
 		try {
@@ -147,14 +147,14 @@ public class Main {
 
 		AbstractSignFactory factory = null;
 		if (selectedSignFormat == SignFormat.CADES) {
-			factory = new CAdESSignFactory();
+			factory = new CAdESSignFactory(inputFile);
 		} else if (selectedSignFormat == SignFormat.PADES) {
 			PAdESProp padesProp = cmdr.createPAdESProp();
 			if(padesProp == null) {
 				System.err.println("Error create PAdES Prop");
 				return;
 			}
-			factory = new PAdESSignFactory(padesProp);
+			factory = new PAdESSignFactory(padesProp,inputFile);
 		}
 
 		Pkcs11SignatureToken token = factory.connectToToken(currentDriverPath, pass);
@@ -174,7 +174,7 @@ public class Main {
 		System.out.println(humanReadableSigner);
 		
 		// Preparing parameters for the PAdES signature
-		AbstractSignatureParameters parameters = factory.setParameter(signer);
+		AbstractSignatureParameters parameters = factory.createParameter(signer);
 		AbstractSignatureService service = factory.createService();
 		DSSDocument toSignDocument = new FileDocument(inputFile);
 		// Get the SignedInfo segment that need to be signed.
@@ -187,7 +187,7 @@ public class Main {
 		// We invoke the padesService to sign the document with the signature value
 		// obtained the previous step.
 		DSSDocument signedDocument = service.signDocument(toSignDocument, parameters, signatureValue);
-		factory.createSignedFile(signedDocument, inputFile);
+		factory.createSignedFile(signedDocument);
 		System.out.println("END");
 
 	}
