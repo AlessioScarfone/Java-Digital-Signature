@@ -73,8 +73,6 @@ public abstract class AbstractSignFactory implements ISignFactory {
 		DSSPrivateKeyEntry selectedKey = null;
 		if (Utils.isCollectionEmpty(keys)) {
 			throw new RuntimeException("No certificate found", null);
-		} else if (Utils.collectionSize(keys) == 1) {
-			selectedKey = keys.get(0);
 		} else {
 			// TODO allow the user to choose the certificate to use
 			
