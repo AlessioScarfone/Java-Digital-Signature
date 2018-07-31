@@ -42,7 +42,7 @@ public class Main {
 	public static void main(String[] args) {
 		
 		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
-
+		
 		// TODO hide warning also for dss.
 
 		ArgsParser cmdr = new ArgsParser();
@@ -167,6 +167,11 @@ public class Main {
 			return;
 		}
 		DSSPrivateKeyEntry signer = factory.getSigner(keys);
+		
+		if(signer == null) {
+			System.err.println("Signature not performed");
+			return;
+		}
 		
 		System.out.println("Certificate to use:");
 		CertificateToken ct= signer.getCertificate();

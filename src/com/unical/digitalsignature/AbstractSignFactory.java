@@ -15,9 +15,13 @@ import eu.europa.esig.dss.utils.Utils;
 import eu.europa.esig.dss.x509.CertificateToken;
 
 public abstract class AbstractSignFactory implements ISignFactory {
-	
+
 	protected File inputFile;
-	
+	private String keyUsageLabel[] = { "digitalSignature", "nonRepudiation", "keyEncipherment", "dataEncipherment",
+			"keyAgreement", "keyCertSign", "cRLSign", "encipherOnly", "decipherOnly" };
+
+	private final int nonRepudiationIndex = 1;
+
 	public AbstractSignFactory(File inputFile) {
 		this.inputFile = inputFile;
 	}
@@ -49,11 +53,14 @@ public abstract class AbstractSignFactory implements ISignFactory {
 		// * decipherOnly (8)
 		// }
 		boolean[] keyUsageValue = ct.getCertificate().getKeyUsage();
-		String keyUsageLabel[] = { "digitalSignature", "nonRepudiation", "keyEncipherment", "dataEncipherment",
-				"keyAgreement", "keyCertSign", "cRLSign", "encipherOnly", "decipherOnly" };
 		for (int i = 0; i < 9; i++) {
 			format(keyUsageLabel[i], keyUsageValue[i]);
 		}
+	}
+
+	private boolean haveNonRepudiation(DSSPrivateKeyEntry key) {
+		boolean[] keyUsage = key.getCertificate().getCertificate().getKeyUsage();
+		return keyUsage[nonRepudiationIndex];
 	}
 
 	private void format(String s, boolean val) {
@@ -69,25 +76,18 @@ public abstract class AbstractSignFactory implements ISignFactory {
 		} else if (Utils.collectionSize(keys) == 1) {
 			selectedKey = keys.get(0);
 		} else {
-			//TODO user can select certificate to use
+			// TODO allow the user to choose the certificate to use
 			
-			selectedKey = keys.get(0);
-			// Map<String, DSSPrivateKeyEntry> map = new TreeMap<String,
-			// DSSPrivateKeyEntry>();
-			// for (DSSPrivateKeyEntry dssPrivateKeyEntry : keys) {
-			// CertificateToken certificate = dssPrivateKeyEntry.getCertificate();
-			// String text = DSSASN1Utils.getHumanReadableName(certificate) + " (" +
-			// certificate.getSerialNumber()
-			// + ")";
-			// map.put(text, dssPrivateKeyEntry);
-			// }
-			// System.out.println("Certificates:");
-			// for (String k : map.keySet()) {
-			// System.out.println(k+"\n");
-			// //get key usage
-			// System.out.println("CERT DATA:");
-			// System.out.println(map.get(k).getCertificate().getCertificate().toString());
-			// }
+			// use first key with "NonRepudiation"
+			for (DSSPrivateKeyEntry key : keys) {
+				if (haveNonRepudiation(key)) {
+					selectedKey = key;
+					break;
+				}
+			}
+			if (selectedKey == null) {
+				System.err.println("Impossible to find a certificate that could be used to sign");
+			}
 		}
 		return selectedKey;
 	}
