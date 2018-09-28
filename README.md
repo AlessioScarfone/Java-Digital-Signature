@@ -50,3 +50,4 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
 
 #### NOTE:
 **Tested only on Windows.**
+**Tested with JDK8 u181**
