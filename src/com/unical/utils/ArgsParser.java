@@ -52,7 +52,10 @@ public class ArgsParser {
 	private class CommonParam {
 		@Parameter(names = { "-h", "--help" }, description = "show usage", help = true, order = 0)
 		private boolean help = false;
-
+		
+		@Parameter(names = { "-c", "--choose-certificate" }, description = "choose certificate tu use", help = true, order = 1)
+		private boolean choice_certificate = false;
+		
 		// @Parameter(names = { "-d",
 		// "--driver" }, converter = FileConverter.class, description = "PKCS#11
 		// Driver", required = false, arity = 1, order = 1)
@@ -60,6 +63,10 @@ public class ArgsParser {
 
 		public boolean isHelp() {
 			return help;
+		}
+
+		public boolean isChoice_certificate() {
+			return choice_certificate;
 		}
 
 		// public File getDriver() {
@@ -102,12 +109,16 @@ public class ArgsParser {
 		@Parameter(names = { "-ph",
 				"--horizontal-signature-position" }, description = "horizontal position of visible signature: L(eft) - C(enter) - R(ight) [If a field is selected this option is ignored]", arity = 1, order = 9)
 		private String posH;
+		
+		@Parameter(names = { "-p",
+		"--page" }, description = "page of signature", arity = 1, order = 9)
+		private int page = 1;
 
 		public File getFileToSign() {
 			return fileToSign;
 		}
 
-		public boolean getVisibleSignature() {
+		public boolean useVisibleSignature() {
 			return useVisibleSignature;
 		}
 
@@ -139,6 +150,12 @@ public class ArgsParser {
 			}
 			return null;
 		}
+
+		public int getPage() {
+			return page;
+		}
+		
+		
 
 	}
 
@@ -176,14 +193,14 @@ public class ArgsParser {
 	public PAdESProp createPAdESProp() {
 		if (isPAdES())
 			return new PAdESProp(getUseVisibleSignature(), getUseVisibleSignatureImage(), getHorizontalAlignment(),
-					getVerticalAlignment());
+					getVerticalAlignment(),getPage());
 		return null;
 	}
 
 	public boolean getUseVisibleSignature() {
 		String command = jCommander.getParsedCommand();
 		if (command.equals(padesCommandLabel)) {
-			if (getPadesCommand().getVisibleSignature() || getPadesCommand().getVisibleSignatureImage() != null)
+			if (getPadesCommand().useVisibleSignature() || getPadesCommand().getVisibleSignatureImage() != null)
 				return true;
 		}
 		return false;
@@ -208,6 +225,13 @@ public class ArgsParser {
 		if (command.equals(padesCommandLabel))
 			return getPadesCommand().getPosHorizontal();
 		return null;
+	}
+	
+	public int getPage() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(padesCommandLabel))
+			return getPadesCommand().getPage();
+		return 1;
 	}
 
 	private CommonParam getCommand() {
@@ -253,7 +277,13 @@ public class ArgsParser {
 			return getCommand().isHelp();
 		return false;
 	}
-
+	
+	public boolean isChoice_certificate() {
+		if (getCommand() != null)
+			return getCommand().isChoice_certificate();
+		return false;
+	}
+	
 	public File getDriver() {
 		// if (getCommand() != null)
 		// return getCommand().getDriver();

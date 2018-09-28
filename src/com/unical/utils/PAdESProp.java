@@ -18,14 +18,15 @@ public class PAdESProp {
 	
 	private int page = 1; //page start from 1
 	
-	public PAdESProp(boolean use, File file,VisualSignatureAlignmentHorizontal posHor,VisualSignatureAlignmentVertical posVer) {
+	public PAdESProp(boolean useVisibleSignature, File file,VisualSignatureAlignmentHorizontal posHor,VisualSignatureAlignmentVertical posVer,int page) {
 		super();
-		this.useVisibileSign = use;
+		this.useVisibileSign = useVisibleSignature;
 		this.imageFile = file;
 		if(posHor != null)
 			this.posH = posHor;
 		if(posVer != null)
 			this.posV = posVer;
+		this.page = page;
 	}
 
 	public boolean useVisibleSign() {

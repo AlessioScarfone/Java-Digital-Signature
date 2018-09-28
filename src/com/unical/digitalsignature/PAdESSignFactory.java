@@ -21,6 +21,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 
 import com.google.common.io.Files;
 import com.unical.utils.PAdESProp;
+import com.unical.utils.Utility;
 
 import eu.europa.esig.dss.AbstractSignatureParameters;
 import eu.europa.esig.dss.DSSASN1Utils;
@@ -75,7 +76,6 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		LocalDate localDate = ldt.toLocalDate();
 		String s = localDate.toString() + " " + localTime.toString() + " UTC";
 		return s;
-
 	}
 
 	private SignatureImageParameters addVisibleSignatureParameters(String humanReadableSigner, boolean useField) {
@@ -84,9 +84,11 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		imageParameters.setRotation(VisualSignatureRotation.AUTOMATIC);
 
 		if (useField == false) {
+			if(prop.getPage() > getNumberPagePDF() || prop.getPage() < 1) {
+				prop.setPage(1);
+				System.out.println("Selected page is invalid. Use first page.");
+			}
 			imageParameters.setPage(prop.getPage());
-			// the origin is the left and top corner of the page
-			// System.out.println(prop.toString());
 			imageParameters.setAlignmentHorizontal(prop.getPosHorizontal());
 			imageParameters.setAlignmentVertical(prop.getPosVertical());
 			// imageParameters.setxAxis(0);
@@ -110,6 +112,17 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		imageParameters.setTextParameters(textParameters);
 
 		return imageParameters;
+	}
+
+	private int getNumberPagePDF() {
+		PDDocument doc;
+		try {
+			doc = PDDocument.load(inputFile);
+			return doc.getNumberOfPages();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return 1;
 	}
 
 	private boolean selectSignatureField(PAdESSignatureParameters parameters) {
@@ -137,20 +150,8 @@ public class PAdESSignFactory extends AbstractSignFactory {
 					}
 				}
 				if (fields_empty.size() != 0) {
-					System.out.println("Select Field to use (-1 or Enter for skip):");
-					int n = -1;
-					String readLine = System.console().readLine();
-					if (isInteger(readLine))
-						n = Integer.parseInt(readLine);
-					while (n >= fields_empty.size() || n < -1) { // if n is out of bound, read again
-						System.out.println("Input Not Valid");
-						System.out.println("Select Field to use (-1 or Enter for skip):");
-						readLine = System.console().readLine();
-						if (isInteger(readLine))
-							n = Integer.parseInt(readLine);
-						if (readLine.isEmpty())
-							n = -1;
-					}
+					int n = Utility.getValidIntInRange("Select Field to use (-1 or Enter for skip):", -1,
+							fields_empty.size());
 					if (n != -1)
 						parameters.setSignatureFieldId(fields_empty.get(n).getFullyQualifiedName());
 					else {
@@ -171,18 +172,6 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		}
 		return false;
 
-	}
-
-	public static boolean isInteger(String s) {
-		try {
-			Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			return false;
-		} catch (NullPointerException e) {
-			return false;
-		}
-		// only got here if we didn't return false
-		return true;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

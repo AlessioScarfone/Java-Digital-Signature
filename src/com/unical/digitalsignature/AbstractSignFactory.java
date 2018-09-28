@@ -3,10 +3,12 @@ package com.unical.digitalsignature;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.unical.utils.Utility;
 
+import eu.europa.esig.dss.DSSASN1Utils;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
@@ -58,29 +60,36 @@ public abstract class AbstractSignFactory implements ISignFactory {
 		}
 	}
 
-	private boolean haveNonRepudiation(DSSPrivateKeyEntry key) {
-		boolean[] keyUsage = key.getCertificate().getCertificate().getKeyUsage();
-		return keyUsage[nonRepudiationIndex];
-	}
-
-	private void format(String s, boolean val) {
-		System.out.println(" " + s + " => " + val);
-	}
-
 	// SELECT CERTIFICATE TO USE
+	// only certificate with NonRepudiation can be used
 	@Override
-	public DSSPrivateKeyEntry getSigner(List<DSSPrivateKeyEntry> keys) {
+	public DSSPrivateKeyEntry getSigner(List<DSSPrivateKeyEntry> keys, boolean choose_cert) {
 		DSSPrivateKeyEntry selectedKey = null;
 		if (Utils.isCollectionEmpty(keys)) {
 			throw new RuntimeException("No certificate found", null);
 		} else {
 			// TODO allow the user to choose the certificate to use
-			
-			// use first key with "NonRepudiation"
-			for (DSSPrivateKeyEntry key : keys) {
-				if (haveNonRepudiation(key)) {
-					selectedKey = key;
-					break;
+			List<DSSPrivateKeyEntry> usable_keys = new ArrayList<DSSPrivateKeyEntry>();
+			if (choose_cert) {
+				int c = 0;
+				for (DSSPrivateKeyEntry key : keys) {
+					if (haveNonRepudiation(key)) {
+						usable_keys.add(key);
+						printCertificateSelectionField(key, c);
+						c++;
+					}
+				}
+				if (!usable_keys.isEmpty()) {
+					int n = Utility.getValidIntInRange("Select a certificate to use:",0,usable_keys.size());
+					selectedKey = usable_keys.get(n);
+				}
+			} else {
+				// use first key with "NonRepudiation"
+				for (DSSPrivateKeyEntry key : keys) {
+					if (haveNonRepudiation(key)) {
+						selectedKey = key;
+						break;
+					}
 				}
 			}
 			if (selectedKey == null) {
@@ -101,6 +110,21 @@ public abstract class AbstractSignFactory implements ISignFactory {
 			System.err.println("Error write file");
 			// e.printStackTrace();
 		}
+	}
+
+	private boolean haveNonRepudiation(DSSPrivateKeyEntry key) {
+		boolean[] keyUsage = key.getCertificate().getCertificate().getKeyUsage();
+		return keyUsage[nonRepudiationIndex];
+	}
+
+	private void format(String s, boolean val) {
+		System.out.println(" " + s + " => " + val);
+	}
+
+	private void printCertificateSelectionField(DSSPrivateKeyEntry key, int index) {
+		CertificateToken ct = key.getCertificate();
+		String humanReadableSigner = DSSASN1Utils.getHumanReadableName(ct);
+		System.out.println("[" + index + "] - certificate:" + humanReadableSigner);
 	}
 
 }

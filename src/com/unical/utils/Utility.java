@@ -46,4 +46,37 @@ public class Utility {
 		return null;
 	}
 	
+	public static boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		} catch (NullPointerException e) {
+			return false;
+		}
+		// only got here if we didn't return false
+		return true;
+	}
+	
+	public static int getValidIntInRange(String text,int minInt,int maxInt) {
+		System.out.println(text);
+		int n = -1;
+		String readLine = System.console().readLine();
+		if (readLine.isEmpty())
+			n = -1;
+		else if (Utility.isInteger(readLine))
+			n = Integer.parseInt(readLine);
+		while (n >= maxInt || n < minInt) { // if n is out of bound, read again
+			System.out.println("Input Not Valid");
+			System.out.println(text);
+			readLine = System.console().readLine();
+			if (readLine.isEmpty())
+				n = -1;
+			else if (Utility.isInteger(readLine))
+				n = Integer.parseInt(readLine);
+			
+		}
+		return n;
+	}
+	
 }

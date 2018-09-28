@@ -14,7 +14,7 @@ public interface ISignFactory {
 
 	public Pkcs11SignatureToken connectToToken(File driverPath, char[] pass);
 
-	public DSSPrivateKeyEntry getSigner(List<DSSPrivateKeyEntry> keys);
+	public DSSPrivateKeyEntry getSigner(List<DSSPrivateKeyEntry> keys,boolean choose_cert);
 	
 	public void showKeyUsage(CertificateToken ct);
 
@@ -25,5 +25,6 @@ public interface ISignFactory {
 	public AbstractSignatureService<?> createService();
 
 	public void createSignedFile(DSSDocument signedDocument);
+
 
 }

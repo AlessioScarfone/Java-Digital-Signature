@@ -50,7 +50,7 @@ public class Main {
 			cmdr.parseArgs(args);
 		} catch (ParameterException | NullPointerException e) {
 			System.err.println("Parameter Error.");
-			e.printStackTrace();
+//			e.printStackTrace();
 			return;
 		}
 		// Show help
@@ -166,7 +166,8 @@ public class Main {
 			// e.printStackTrace();
 			return;
 		}
-		DSSPrivateKeyEntry signer = factory.getSigner(keys);
+		
+		DSSPrivateKeyEntry signer = factory.getSigner(keys,cmdr.isChoice_certificate());
 		
 		if(signer == null) {
 			System.err.println("Signature not performed");
