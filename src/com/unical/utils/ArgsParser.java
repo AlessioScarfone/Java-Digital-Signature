@@ -111,7 +111,7 @@ public class ArgsParser {
 		private String posH;
 		
 		@Parameter(names = { "-p",
-		"--page" }, description = "page of signature", arity = 1, order = 9)
+		"--page" }, description = "page of signature", arity = 1, order = 10)
 		private int page = 1;
 
 		public File getFileToSign() {

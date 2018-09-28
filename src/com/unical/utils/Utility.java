@@ -59,7 +59,7 @@ public class Utility {
 	}
 	
 	public static int getValidIntInRange(String text,int minInt,int maxInt) {
-		System.out.println(text);
+		System.out.print(text);
 		int n = -1;
 		String readLine = System.console().readLine();
 		if (readLine.isEmpty())
@@ -68,7 +68,7 @@ public class Utility {
 			n = Integer.parseInt(readLine);
 		while (n >= maxInt || n < minInt) { // if n is out of bound, read again
 			System.out.println("Input Not Valid");
-			System.out.println(text);
+			System.out.print(text);
 			readLine = System.console().readLine();
 			if (readLine.isEmpty())
 				n = -1;

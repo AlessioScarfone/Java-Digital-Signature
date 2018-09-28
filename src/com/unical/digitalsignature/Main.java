@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.beust.jcommander.ParameterException;
 import com.google.common.io.Files;
@@ -40,10 +41,9 @@ public class Main {
 	private static SignFormat selectedSignFormat = SignFormat.PADES;
 
 	public static void main(String[] args) {
-		
+		//hide warning for external library.
 		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
-		
-		// TODO hide warning also for dss.
+		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, Level.OFF.toString());
 
 		ArgsParser cmdr = new ArgsParser();
 		try {
@@ -162,7 +162,7 @@ public class Main {
 		try {
 			keys = token.getKeys();
 		} catch (DSSException e) {
-			System.err.println("Token access failed.");
+			System.err.println("Token access failed. <<");
 			// e.printStackTrace();
 			return;
 		}
@@ -174,7 +174,7 @@ public class Main {
 			return;
 		}
 		
-		System.out.println("Certificate to use:");
+		System.out.print("Certificate to use:  ");
 		CertificateToken ct= signer.getCertificate();
 		String humanReadableSigner = DSSASN1Utils.getHumanReadableName(ct);
 		System.out.println(humanReadableSigner);
@@ -192,9 +192,10 @@ public class Main {
 		SignatureValue signatureValue = token.sign(dataToSign, digestAlgorithm, signer);
 		// We invoke the padesService to sign the document with the signature value
 		// obtained the previous step.
+		System.out.println("Start of signing process...");
 		DSSDocument signedDocument = service.signDocument(toSignDocument, parameters, signatureValue);
 		factory.createSignedFile(signedDocument);
-		System.out.println("END");
+		System.out.println("End of signing process.");
 
 	}
 
