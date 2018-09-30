@@ -27,7 +27,7 @@ public class Utility {
 		return realArch;
 	}
 	
-	public  static char[] getPassword() {
+	public  static char[] readPasswordFromConsole() {
 		Console cnsl = null;
 
 		try {

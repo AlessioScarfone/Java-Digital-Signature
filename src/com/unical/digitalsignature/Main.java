@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import com.beust.jcommander.ParameterException;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
-import com.unical.utils.ArgsParser;
+import com.unical.argparser.ArgsParser;
 import com.unical.utils.PAdESProp;
 import com.unical.utils.Utility;
 
@@ -33,24 +33,28 @@ public class Main {
 	}
 
 	private static File driverPathWin = new File(Utility.buildFilePath("driver", "Windows", "bit4xpki.dll"));
+	private static String resource_DriverPathWindows = "resources/driver/Windows/bit4xpki.dll";
+
+	// TODO: currently they are not present in GitHub folder - Test on linux
 	private static File driverPathLinux32 = new File(Utility.buildFilePath("driver", "Linux", "32", "libbit4xpki.so"));
+	private static String resource_DriverPathLinux32 = "resources/driver/Linux/32/libbit4xpki.so";
 	private static File driverPathLinux64 = new File(Utility.buildFilePath("driver", "Linux", "64", "libbit4xpki.so"));
+	private static String resource_DriverPathLinux64 = "resources/driver/Linux/64/libbit4xpki.so";
 
 	private static File currentDriverPath = null;
-	
+
 	private static SignFormat selectedSignFormat = SignFormat.PADES;
 
 	public static void main(String[] args) {
-		//hide warning for external library.
+		// hide warning for external library.
 		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, Level.OFF.toString());
 
-		ArgsParser cmdr = new ArgsParser();
+		ArgsParser cmdr = ArgsParser.getInstance();
 		try {
 			cmdr.parseArgs(args);
 		} catch (ParameterException | NullPointerException e) {
 			System.err.println("Parameter Error.");
-//			e.printStackTrace();
 			return;
 		}
 		// Show help
@@ -70,53 +74,51 @@ public class Main {
 
 		// show certificates info and key usage
 		if (cmdr.showCertInfo() || cmdr.showKeyUsage()) {
-			showInfo(cmdr.showCertInfo(),cmdr.showKeyUsage());
+			showInfo(cmdr.showCertInfo(), cmdr.showKeyUsage());
 			return;
 		}
 
 		// check selected sign format
-		if (!checkSelectedSignFormat(cmdr)) {
+		if (!checkSelectedSignFormat()) {
 			System.err.println("Select (only) one between PAdES and CAdES.");
 			return;
 		}
-		
+
 		File inputFile = cmdr.getFileToSign();
 		if (inputFile == null) {
 			System.err.println("No File input");
 			return;
 		}
-		
+
 		// check file to sign format
 		if (!checkFile(inputFile))
 			return;
 
-		
-		sign(inputFile,cmdr);
+		sign(inputFile);
 
 	}
-	
-	
-	
-	private static boolean checkSelectedSignFormat(ArgsParser cmdr) {
+
+	private static boolean checkSelectedSignFormat() {
+		ArgsParser cmdr = ArgsParser.getInstance();
 		selectedSignFormat = cmdr.checkSelectedSignFormat();
-		if(selectedSignFormat == null)
+		if (selectedSignFormat == null)
 			return false;
 		System.out.println("Selected Sign Format: " + selectedSignFormat.toString());
 		return true;
 	}
 
 	private static void showInfo(boolean info, boolean keyusage) {
-		char[] pass = Utility.getPassword();
-		AbstractSignFactory factory = new CAdESSignFactory(null); //no file is needed
+		char[] pass = getPassword();
+		AbstractSignFactory factory = new CAdESSignFactory(null); // no file is needed
 		Pkcs11SignatureToken token = factory.connectToToken(currentDriverPath, pass);
 		List<DSSPrivateKeyEntry> keys;
 		try {
 			keys = token.getKeys();
 			int count = 0;
 			for (DSSPrivateKeyEntry dssPrivateKeyEntry : keys) {
-				CertificateToken ct= dssPrivateKeyEntry.getCertificate();
+				CertificateToken ct = dssPrivateKeyEntry.getCertificate();
 				System.out.println(DSSASN1Utils.getHumanReadableName(ct));
-				
+
 				System.out.println("Certificate:" + count);
 				if (info == true) {
 					System.out.println("Info:");
@@ -139,9 +141,19 @@ public class Main {
 
 	}
 
-	private static void sign(File inputFile, ArgsParser cmdr) {
+	private static char[] getPassword() {
+		ArgsParser cmdr = ArgsParser.getInstance();
+		if (cmdr.getPassword() == null)
+			return Utility.readPasswordFromConsole();
+		else
+			return cmdr.getPassword().toCharArray();
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static void sign(File inputFile) {
+		ArgsParser cmdr = ArgsParser.getInstance();
 		System.out.println("Start Signature Procedure");
-		char[] pass = Utility.getPassword();
+		char[] pass = getPassword();
 
 		System.out.println();
 
@@ -150,11 +162,11 @@ public class Main {
 			factory = new CAdESSignFactory(inputFile);
 		} else if (selectedSignFormat == SignFormat.PADES) {
 			PAdESProp padesProp = cmdr.createPAdESProp();
-			if(padesProp == null) {
+			if (padesProp == null) {
 				System.err.println("Error create PAdES Prop");
 				return;
 			}
-			factory = new PAdESSignFactory(padesProp,inputFile);
+			factory = new PAdESSignFactory(padesProp, inputFile);
 		}
 
 		Pkcs11SignatureToken token = factory.connectToToken(currentDriverPath, pass);
@@ -162,23 +174,23 @@ public class Main {
 		try {
 			keys = token.getKeys();
 		} catch (DSSException e) {
-			System.err.println("Token access failed. <<");
+			System.err.println("Token access failed");
 			// e.printStackTrace();
 			return;
 		}
-		
-		DSSPrivateKeyEntry signer = factory.getSigner(keys,cmdr.isChoice_certificate());
-		
-		if(signer == null) {
+
+		DSSPrivateKeyEntry signer = factory.getSigner(keys, cmdr.isChoice_certificate());
+
+		if (signer == null) {
 			System.err.println("Signature not performed");
 			return;
 		}
-		
+
 		System.out.print("Certificate to use:  ");
-		CertificateToken ct= signer.getCertificate();
+		CertificateToken ct = signer.getCertificate();
 		String humanReadableSigner = DSSASN1Utils.getHumanReadableName(ct);
 		System.out.println(humanReadableSigner);
-		
+
 		// Preparing parameters for the PAdES signature
 		AbstractSignatureParameters parameters = factory.createParameter(signer);
 		AbstractSignatureService service = factory.createService();
@@ -249,7 +261,7 @@ public class Main {
 		try {
 			if (systype == SystemType.WINDOWS && !driverPathWin.exists()) {
 				// load resources
-				URL win = Resources.getResource("resources/driver/Windows/bit4xpki.dll");
+				URL win = Resources.getResource(resource_DriverPathWindows);
 
 				// create folder
 				File wf = new File(Utility.buildFilePath("driver", "Windows"));
@@ -261,7 +273,7 @@ public class Main {
 				Files.write(bytes, driverPathWin);
 			}
 			if (systype == SystemType.LINUX && !driverPathLinux32.exists()) {
-				URL linux32 = Resources.getResource("resources/driver/Linux/32/libbit4xpki.so");
+				URL linux32 = Resources.getResource(resource_DriverPathLinux32);
 				File lf = new File(Utility.buildFilePath("driver", "Linux", "32"));
 				if (!lf.exists())
 					lf.mkdirs();
@@ -269,7 +281,7 @@ public class Main {
 				Files.write(bytes, driverPathLinux32);
 			}
 			if (systype == SystemType.LINUX && !driverPathLinux64.exists()) {
-				URL linux64 = Resources.getResource("resources/driver/Linux/64/libbit4xpki.so");
+				URL linux64 = Resources.getResource(resource_DriverPathLinux64);
 				File lf64 = new File(Utility.buildFilePath("driver", "Linux", "64"));
 				if (!lf64.exists())
 					lf64.mkdirs();

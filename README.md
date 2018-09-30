@@ -11,6 +11,8 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
       show usage
     -d, --driver
       PKCS#11 Driver
+    -p, --password
+      Pass password in command line (USE WITH CAUTION)
     -u, --key-usage
       show key usage
       Default: false
@@ -38,15 +40,15 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
             Default: false
           -vi, --visible-signature-image
             add visible signature - text and image
+          -pg, --page
+            page of signature
+            Default: 1
           -pv, --vertical-signature-position
             vertical position of visible signature: T(op) - M(iddle) -
             B(ottom) [If a field is selected this option is ignored]
           -ph, --horizontal-signature-position
             horizontal position of visible signature: L(eft) - C(enter) -
             R(ight) [If a field is selected this option is ignored]
-          -p, --page
-            page of signature
-            Default: 1
 
 ```
 
