@@ -1,7 +1,7 @@
 # Java-Digital-Signature
 Java command line  tool for digital signature PKCS#11
 
-```bash
+```
 # help
 > java -jar signer.jar -h
 
