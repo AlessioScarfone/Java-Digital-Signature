@@ -58,6 +58,7 @@ public class Utility {
 		return true;
 	}
 	
+	/**get a integer in [ minInt , maxInt [**/
 	public static int getValidIntInRange(String text,int minInt,int maxInt) {
 		System.out.print(text);
 		int n = -1;

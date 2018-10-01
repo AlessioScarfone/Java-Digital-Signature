@@ -103,7 +103,7 @@ public class ArgsParser {
 
 	public PAdESProp createPAdESProp() {
 		if (isPAdES())
-			return new PAdESProp(useVisibleSignature(), getUseVisibleSignatureImage(), getHorizontalAlignment(),
+			return new PAdESProp(useVisibleSignature(),getUseVisibleSignatureImage(),getNameFieldToSign(),getHorizontalAlignment(),
 					getVerticalAlignment(), getPage());
 		return null;
 	}
@@ -135,6 +135,20 @@ public class ArgsParser {
 		String command = jCommander.getParsedCommand();
 		if (command.equals(padesCommandLabel))
 			return getPadesCommand().getPosHorizontal();
+		return null;
+	}
+	
+	public String getNameFieldToSign() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(padesCommandLabel))
+			return getPadesCommand().getNameFieldToSign();
+		return null;
+	}
+	
+	public String getDestination() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(padesCommandLabel))
+			return getPadesCommand().getDestination();
 		return null;
 	}
 
@@ -200,7 +214,7 @@ public class ArgsParser {
 	
 	// --------------------------------------------------------------------------------- 
 
-		public CommonParam getCommand() {
+		private CommonParam getCommand() {
 			String command = jCommander.getParsedCommand();
 			if (command != null) {
 				if (command.equals(cadesCommandLabel))
@@ -234,5 +248,7 @@ public class ArgsParser {
 			return new File(value);
 		}
 	}
+
+	
 
 }

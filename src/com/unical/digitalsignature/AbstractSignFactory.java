@@ -115,7 +115,7 @@ public abstract class AbstractSignFactory implements ISignFactory {
 	}
 	
 	public String getOutputFilePath() {
-		String dir=ArgsParser.getInstance().getCommand().getDestination();
+		String dir=ArgsParser.getInstance().getDestination();
 		if(dir == null)
 			dir = inputFile.getParent();
 		if (dir == null)

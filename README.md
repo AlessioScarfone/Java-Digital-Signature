@@ -27,6 +27,8 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
             show usage
           -c, --choose-certificate
             choose certificate tu use
+          -o, --output-destination
+            set destination FOLDER for the output file
 
     pades      PAdES sign format
       Usage: pades [options] FileToSign
@@ -35,13 +37,17 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
             show usage
           -c, --choose-certificate
             choose certificate tu use
+          -o, --output-destination
+            set destination FOLDER for the output file
           -v, --visible-signature
             add visible signature - only text
             Default: false
           -vi, --visible-signature-image
             add visible signature - text and image
+          -f, --field-to-sign
+            name of the field to sign
           -pg, --page
-            page of signature
+            page of signature  [If a field is selected this option is ignored]
             Default: 1
           -pv, --vertical-signature-position
             vertical position of visible signature: T(op) - M(iddle) -

@@ -24,16 +24,20 @@ public class PAdESCommand extends CommonParam {
 			"--visible-signature-image" }, description = "add visible signature - text and image ", arity = 1, order = 7)
 	private File useImageVisibleSignature;
 	
+	@Parameter(names = { "-f",
+	"--field-to-sign" }, description = "name of the field to sign ", arity = 1, order = 8)
+	private String fieldName;
+	
 	@Parameter(names = { "-pg",
-	"--page" }, description = "page of signature  [If a field is selected this option is ignored]", arity = 1, order = 8)
+	"--page" }, description = "page of signature  [If a field is selected this option is ignored]", arity = 1, order = 9)
 	private int page = 1;
 	
 	@Parameter(names = { "-pv",
-			"--vertical-signature-position" }, description = "vertical position of visible signature: T(op) - M(iddle) - B(ottom) [If a field is selected this option is ignored]", arity = 1, order = 9)
+			"--vertical-signature-position" }, description = "vertical position of visible signature: T(op) - M(iddle) - B(ottom) [If a field is selected this option is ignored]", arity = 1, order = 10)
 	private String posV;
 
 	@Parameter(names = { "-ph",
-			"--horizontal-signature-position" }, description = "horizontal position of visible signature: L(eft) - C(enter) - R(ight) [If a field is selected this option is ignored]", arity = 1, order = 10)
+			"--horizontal-signature-position" }, description = "horizontal position of visible signature: L(eft) - C(enter) - R(ight) [If a field is selected this option is ignored]", arity = 1, order = 11)
 	private String posH;
 	
 	
@@ -78,6 +82,12 @@ public class PAdESCommand extends CommonParam {
 	public int getPage() {
 		return page;
 	}
+
+	public String getNameFieldToSign() {
+		return fieldName;
+	}
+	
+	
 	
 	
 

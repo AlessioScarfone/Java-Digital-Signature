@@ -20,6 +20,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 
 import com.google.common.io.Files;
+import com.unical.argparser.ArgsParser;
 import com.unical.utils.PAdESProp;
 import com.unical.utils.Utility;
 
@@ -84,7 +85,7 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		imageParameters.setRotation(VisualSignatureRotation.AUTOMATIC);
 
 		if (useField == false) {
-			if(prop.getPage() > getNumberPagePDF() || prop.getPage() < 1) {
+			if (prop.getPage() > getNumberPagePDF() || prop.getPage() < 1) {
 				prop.setPage(1);
 				System.out.println("Selected page is invalid. Use first page.");
 			}
@@ -114,17 +115,6 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		return imageParameters;
 	}
 
-	private int getNumberPagePDF() {
-		PDDocument doc;
-		try {
-			doc = PDDocument.load(inputFile);
-			return doc.getNumberOfPages();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return 1;
-	}
-
 	private boolean selectSignatureField(PAdESSignatureParameters parameters) {
 		PDDocument doc;
 		try {
@@ -136,44 +126,40 @@ public class PAdESSignFactory extends AbstractSignFactory {
 				// get all fields
 				List<PDField> fields = pdAcroForm.getFields();
 				// System.out.println("Total Fields number:" + fields.size() + "\n");
-				List<PDField> fields_empty = new ArrayList<PDField>();
-				int c = 0;
-				for (PDField pdField : fields) {
-					// show only empty fields
-					if (pdField.getValueAsString().isEmpty()) {
-						fields_empty.add(pdField);
-						String fieldName = pdField.getFullyQualifiedName();
-						PDPage currentPage = pdField.getWidgets().get(0).getPage();
-						int pageNumber = allPages.indexOf(currentPage) + 1;
-						System.out.println("[" + c + "] - page:" + pageNumber + " - " + fieldName);
-						c++;
-					}
-				}
+				List<PDField> fields_empty = createListEmptyField(fields);
+				// if exist any signable field
 				if (fields_empty.size() != 0) {
-					int n = Utility.getValidIntInRange("Select Field to use (-1 or Enter for skip):", -1,
-							fields_empty.size());
-					if (n != -1)
-						parameters.setSignatureFieldId(fields_empty.get(n).getFullyQualifiedName());
-					else {
-						System.out.println("No Field selected.");
-						return false;
+					// check if is possible to use field passed from console
+					String nameFieldToSign = ArgsParser.getInstance().getNameFieldToSign();
+					if (nameFieldToSign != null && findField(fields_empty, nameFieldToSign)) {
+						parameters.setSignatureFieldId(nameFieldToSign);
+						return true;
+					} else {
+						printListEmptyField(allPages, fields_empty);
+						int n = Utility.getValidIntInRange("Select Field to use (-1 or Enter for skip):", -1,
+								fields_empty.size());
+						if (n != -1)
+							parameters.setSignatureFieldId(fields_empty.get(n).getFullyQualifiedName());
+						else {
+							System.out.println("No Field selected.");
+							return false;
+						}
+						return true;
 					}
-					return true;
 				} else {
 					System.out.println("No available field in the pdf.");
 					return false;
 				}
 			}
+			System.out.println("No available field in the pdf.");
 			return false;
 
 		} catch (IOException e) {
 			System.err.println("Error to read input");
-
 		}
 		return false;
-
 	}
-
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public AbstractSignatureService createService() {
 		// Create common certificate verifier
@@ -195,6 +181,49 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		String dir = getOutputFilePath();
 
 		writeFile(dir, newfilename, signedDocument);
+	}
+	
+	//get only empty fields (usable for signature)
+	private List<PDField> createListEmptyField(List<PDField> fields) {
+		List<PDField> fields_empty = new ArrayList<PDField>();
+		for (PDField pdField : fields) {
+			// show only empty fields
+			if (pdField.getValueAsString().isEmpty()) {
+				fields_empty.add(pdField);
+			}
+		}
+		return fields_empty;
+	}
+
+	private void printListEmptyField(PDPageTree allPages, List<PDField> fields_empty) {
+		int c = 0;
+		for (PDField pdField : fields_empty) {
+			String fieldName = pdField.getFullyQualifiedName();
+			PDPage currentPage = pdField.getWidgets().get(0).getPage();
+			int pageNumber = allPages.indexOf(currentPage) + 1;
+			System.out.println("[" + c + "] - page:" + pageNumber + " - " + fieldName);
+			c++;
+		}
+	}
+
+	private boolean findField(List<PDField> fields_empty, String nameFieldToSign) {
+		for (PDField pdField : fields_empty) {
+			if (pdField.getFullyQualifiedName().equals(nameFieldToSign))
+				return true;
+		}
+		System.out.println("There is no field named '"+ nameFieldToSign+"' in the document");
+		return false;
+	}
+
+	private int getNumberPagePDF() {
+		PDDocument doc;
+		try {
+			doc = PDDocument.load(inputFile);
+			return doc.getNumberOfPages();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return 1;
 	}
 
 }
