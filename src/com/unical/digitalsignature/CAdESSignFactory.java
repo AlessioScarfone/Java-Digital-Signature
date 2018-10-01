@@ -57,9 +57,7 @@ public class CAdESSignFactory extends AbstractSignFactory {
 			c++;
 		}
 
-		String dir = inputFile.getParent();
-		if (dir == null)
-			dir = ".";
+		String dir = getOutputFilePath();
 
 		writeFile(dir,newfilename,signedDocument);
 	}

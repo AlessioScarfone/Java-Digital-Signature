@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.unical.argparser.ArgsParser;
 import com.unical.utils.Utility;
 
 import eu.europa.esig.dss.DSSASN1Utils;
@@ -101,6 +102,7 @@ public abstract class AbstractSignFactory implements ISignFactory {
 
 	public void writeFile(String dir, String newfilename, DSSDocument signedDocument) {
 		System.out.println("Create signed file: " + newfilename);
+//		System.out.println("Create signed file: " + Utility.buildFilePath(dir,newfilename));
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(dir + Utility.separator + newfilename);
@@ -110,6 +112,20 @@ public abstract class AbstractSignFactory implements ISignFactory {
 			System.err.println("Error write file");
 			// e.printStackTrace();
 		}
+	}
+	
+	public String getOutputFilePath() {
+		String dir=ArgsParser.getInstance().getCommand().getDestination();
+		if(dir == null)
+			dir = inputFile.getParent();
+		if (dir == null)
+			dir = ".";
+		File fileDest =new File(dir);
+		if (!fileDest.exists())
+			fileDest.mkdirs();
+		
+		return dir;
+		
 	}
 
 	private boolean haveNonRepudiation(DSSPrivateKeyEntry key) {

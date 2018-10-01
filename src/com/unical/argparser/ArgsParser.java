@@ -79,11 +79,11 @@ public class ArgsParser {
 		return password;
 	}
 
-	public CAdESCommand getCadesCommand() {
+	private CAdESCommand getCadesCommand() {
 		return cadesCommand;
 	}
 
-	public PAdESCommand getPadesCommand() {
+	private PAdESCommand getPadesCommand() {
 		return padesCommand;
 	}
 
@@ -200,7 +200,7 @@ public class ArgsParser {
 	
 	// --------------------------------------------------------------------------------- 
 
-		private CommonParam getCommand() {
+		public CommonParam getCommand() {
 			String command = jCommander.getParsedCommand();
 			if (command != null) {
 				if (command.equals(cadesCommandLabel))

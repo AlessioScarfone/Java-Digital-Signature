@@ -25,7 +25,7 @@ public class PAdESCommand extends CommonParam {
 	private File useImageVisibleSignature;
 	
 	@Parameter(names = { "-pg",
-	"--page" }, description = "page of signature", arity = 1, order = 8)
+	"--page" }, description = "page of signature  [If a field is selected this option is ignored]", arity = 1, order = 8)
 	private int page = 1;
 	
 	@Parameter(names = { "-pv",
