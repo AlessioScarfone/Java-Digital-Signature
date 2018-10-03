@@ -181,8 +181,8 @@ If the field name is already known, it can be provided with  `-f` option.
 -----
 
 #### NOTE:
-**Tested only on Windows (JDK8 u181).**
+- Tested only on **Windows (JDK8 u181).**
 
-**Tested with Aruba Token Usb with Italian CNS**: [Link to Aruba token page](https://www.pec.it/cns-token.aspx)
+- **Tested with Aruba Token Usb with Italian CNS**: [Link to Aruba token page](https://www.pec.it/cns-token.aspx)
 
 ![Token Image](https://www.pec.it/getattachment/20362be8-daa3-44a6-9a91-4d801245baa7/Token)
