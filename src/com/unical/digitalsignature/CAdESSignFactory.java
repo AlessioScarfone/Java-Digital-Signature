@@ -54,8 +54,12 @@ public class CAdESSignFactory extends AbstractSignFactory {
 		if (newfilename == null)
 			newfilename = inputFile.getName() + ".p7m";
 		
+		//add original extension if is not present
+		if(Files.getFileExtension(newfilename).equals(""))
+			newfilename = newfilename +"."+Files.getFileExtension(inputFile.getName());
+		
 		// add p7m extension if is not present
-		else if (!Files.getFileExtension(newfilename).equals("p7m"))
+		if (!Files.getFileExtension(newfilename).equals("p7m"))
 			newfilename = newfilename + ".p7m";
 		
 		return checkIfFileExist(newfilename);

@@ -130,12 +130,13 @@ public abstract class AbstractSignFactory implements ISignFactory {
 		// check if file already exist
 		String dir = getOutputDirectory();
 		int c = 1;
-		while (new File(Utility.buildFilePath(dir,newfilename)).exists()) {
-			newfilename = Files.getNameWithoutExtension(newfilename) + "(" + c + ")."
+		String currentName = newfilename;
+		while (new File(Utility.buildFilePath(dir,currentName)).exists()) {
+			currentName = Files.getNameWithoutExtension(newfilename) + "(" + c + ")."
 					+ Files.getFileExtension(newfilename);
 			c++;
 		}
-		return newfilename;
+		return currentName;
 	}
 
 	public void writeFile(String dir, String newfilename, DSSDocument signedDocument) {
