@@ -116,7 +116,7 @@ It is possible to specify folder and name of the output file with `-o` and `-n` 
 
 #### PAdES (PDF Advanced Electronic Signatures):
 
-**No visible signature**
+- **No visible signature**
 
 ```
 >java -jar signer.jar pades test.pdf
@@ -131,7 +131,7 @@ Create signed file: test-signed.pdf
 End of signing process.
 ```
 
-**Visible signature** (`-v` option or `-vi` for use also an image).
+- **Visible signature** (`-v` option or `-vi` for use also an image).
 If the *pdf* contain some signable field, the tool ask to user if he would to use one of them, else the signature is positioned it le left bottom corner of the first page. The position of the signature can be customized using the options `-pg`, `-pv`, `-ph` (*page, vertical postion, horizontal position*)
 
 ```
@@ -151,14 +151,18 @@ End of signing process.
 
 ```
 
-Try to sign a document that contain signable field:
+- Try to sign a document that contain signable **field**:
 
 ```
 >java -jar signer.jar pades -v test-form.pdf                                                      
-[...]                                                                                                                                                                                                                                               Certificate to use: <certificate name>                                                                                                   [0] - page:1 - Signature                                                                                                                 [1] - page:1 - Signature_1                                                                                                               [2] - page:2 - Signature_2                                                                                                               Select Field to use (-1 or Enter for skip):0
+[...]                                                                                                                                    Certificate to use: <certificate name>                                                                                                
+[0] - page:1 - Signature
+[1] - page:1 - Signature_1
+[2] - page:2 - Signature_2
+Select Field to use (-1 or Enter for skip):0
 [....]   
 ```
-In this way the field named 'Singature' was used for contain  the signature.
+In this way the field named 'Signature' was used for contain the signature.
 If the field name is already known, it can be provided with  `-f` option.
 
 ```
