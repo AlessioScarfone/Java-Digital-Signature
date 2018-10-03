@@ -155,7 +155,7 @@ End of signing process.
 
 ```
 >java -jar signer.jar pades -v test-form.pdf                                                      
-[...]                                                                                                                                   
+[...]
 Certificate to use: <certificate name> 
 [0] - page:1 - Signature
 [1] - page:1 - Signature_1
