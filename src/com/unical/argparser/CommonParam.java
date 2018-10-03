@@ -12,8 +12,12 @@ public abstract class CommonParam {
 	@Parameter(names = { "-c", "--choose-certificate" }, description = "choose certificate tu use", help = true, order = 1)
 	private boolean choice_certificate = false;
 	
-	@Parameter(names = { "-o", "--output-destination" }, description = "set destination FOLDER for the output file", help = true, order = 2)
-	private String destination;
+	@Parameter(names = { "-o", "--output-folder" }, description = "set destination FOLDER for the output file", help = true, order = 2)
+	private String outputFolder;
+	
+	@Parameter(names = { "-n", "--newfile-name" }, description = "set name of the new file", help = true, order = 3)
+	private String nameNewFile;
+	
 	
 	public boolean isHelp() {
 		return help;
@@ -23,8 +27,12 @@ public abstract class CommonParam {
 		return choice_certificate;
 	}
 
-	public String getDestination() {
-		return destination;
+	public String getOutputDirectory() {
+		return outputFolder;
+	}
+
+	public String getNameNewFile() {
+		return nameNewFile;
 	}
 	
 }

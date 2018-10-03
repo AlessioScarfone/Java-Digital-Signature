@@ -26,7 +26,6 @@ import com.unical.utils.Utility;
 
 import eu.europa.esig.dss.AbstractSignatureParameters;
 import eu.europa.esig.dss.DSSASN1Utils;
-import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DigestAlgorithm;
 import eu.europa.esig.dss.FileDocument;
 import eu.europa.esig.dss.SignatureLevel;
@@ -170,17 +169,19 @@ public class PAdESSignFactory extends AbstractSignFactory {
 	}
 
 	@Override
-	public void createSignedFile(DSSDocument signedDocument) {
-		String newfilename = Files.getNameWithoutExtension(inputFile.getName()) + "-signed.pdf";
-		int c = 1;
-		while (new File(newfilename).exists()) {
-			newfilename = Files.getNameWithoutExtension(inputFile.getName()) + "-signed(" + c + ").pdf";
-			c++;
-		}
-
-		String dir = getOutputFilePath();
-
-		writeFile(dir, newfilename, signedDocument);
+	protected String getNameNewFile() {
+		//check if user specify a new name
+		String newfilename = ArgsParser.getInstance().getNameNewFile();
+		
+		//use default name
+		if(newfilename == null) 
+			newfilename = Files.getNameWithoutExtension(inputFile.getName()) + "-signed.pdf";
+		
+		//add pdf extension if is not present
+		else if(!Files.getFileExtension(newfilename).equals("pdf"))
+			newfilename = newfilename+".pdf";
+		
+		return checkIfFileExist(newfilename);
 	}
 	
 	//get only empty fields (usable for signature)
@@ -211,7 +212,7 @@ public class PAdESSignFactory extends AbstractSignFactory {
 			if (pdField.getFullyQualifiedName().equals(nameFieldToSign))
 				return true;
 		}
-		System.out.println("There is no field named '"+ nameFieldToSign+"' in the document");
+		System.out.println("There is no empty field named '"+ nameFieldToSign+"' in the document");
 		return false;
 	}
 

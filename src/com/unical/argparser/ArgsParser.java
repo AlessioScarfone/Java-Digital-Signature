@@ -20,7 +20,7 @@ public class ArgsParser {
 	public final static String padesCommandLabel = "pades";
 
 	private JCommander jCommander;
-	
+
 	// ------------------------
 	// ---- CLI Parameters ----
 	// ------------------------
@@ -45,9 +45,9 @@ public class ArgsParser {
 	private PAdESCommand padesCommand;
 
 	// _______________________________________
-	
+
 	// ** Singleton **
-	
+
 	private static ArgsParser instance = null;
 
 	private ArgsParser() {
@@ -58,13 +58,13 @@ public class ArgsParser {
 		jCommander.addCommand(cadesCommandLabel, cadesCommand);
 		jCommander.addCommand(padesCommandLabel, padesCommand);
 	}
-	
+
 	public static ArgsParser getInstance() {
-		if( instance == null)
+		if (instance == null)
 			instance = new ArgsParser();
 		return instance;
 	}
-	
+
 	// ******
 
 	public boolean showCertInfo() {
@@ -77,14 +77,6 @@ public class ArgsParser {
 
 	public String getPassword() {
 		return password;
-	}
-
-	private CAdESCommand getCadesCommand() {
-		return cadesCommand;
-	}
-
-	private PAdESCommand getPadesCommand() {
-		return padesCommand;
 	}
 
 	public String parseArgs(String[] args) {
@@ -103,8 +95,8 @@ public class ArgsParser {
 
 	public PAdESProp createPAdESProp() {
 		if (isPAdES())
-			return new PAdESProp(useVisibleSignature(),getUseVisibleSignatureImage(),getNameFieldToSign(),getHorizontalAlignment(),
-					getVerticalAlignment(), getPage());
+			return new PAdESProp(useVisibleSignature(), getUseVisibleSignatureImage(), getNameFieldToSign(),
+					getHorizontalAlignment(), getVerticalAlignment(), getPage());
 		return null;
 	}
 
@@ -137,20 +129,22 @@ public class ArgsParser {
 			return getPadesCommand().getPosHorizontal();
 		return null;
 	}
-	
+
 	public String getNameFieldToSign() {
 		String command = jCommander.getParsedCommand();
 		if (command.equals(padesCommandLabel))
 			return getPadesCommand().getNameFieldToSign();
 		return null;
 	}
-	
-	public String getDestination() {
-		String command = jCommander.getParsedCommand();
-		if (command.equals(padesCommandLabel))
-			return getPadesCommand().getDestination();
-		return null;
+
+	public String getOutputDirectory() {
+		return getCommand().getOutputDirectory();
 	}
+	
+	public String getNameNewFile() {
+		return getCommand().getNameNewFile();
+	}
+
 
 	public int getPage() {
 		String command = jCommander.getParsedCommand();
@@ -158,7 +152,7 @@ public class ArgsParser {
 			return getPadesCommand().getPage();
 		return 1;
 	}
-	
+
 	public SignFormat checkSelectedSignFormat() {
 		if (isCAdES() == false && isPAdES() == false)
 			return null;
@@ -211,35 +205,43 @@ public class ArgsParser {
 			System.out.println("\t" + parameterDescription.getDescription().toString());
 		}
 	}
-	
-	// --------------------------------------------------------------------------------- 
 
-		private CommonParam getCommand() {
-			String command = jCommander.getParsedCommand();
-			if (command != null) {
-				if (command.equals(cadesCommandLabel))
-					return getCadesCommand();
-				else if (command.equals(padesCommandLabel))
-					return getPadesCommand();
-			}
-			return null;
+	// ---------------------------------------------------------------------------------
+
+	private CAdESCommand getCadesCommand() {
+		return cadesCommand;
+	}
+
+	private PAdESCommand getPadesCommand() {
+		return padesCommand;
+	}
+
+	private CommonParam getCommand() {
+		String command = jCommander.getParsedCommand();
+		if (command != null) {
+			if (command.equals(cadesCommandLabel))
+				return getCadesCommand();
+			else if (command.equals(padesCommandLabel))
+				return getPadesCommand();
 		}
+		return null;
+	}
 
-		private boolean isCAdES() {
-			String command = jCommander.getParsedCommand();
-			if (command.equals(ArgsParser.cadesCommandLabel))
-				return true;
-			return false;
-		}
+	private boolean isCAdES() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(ArgsParser.cadesCommandLabel))
+			return true;
+		return false;
+	}
 
-		private boolean isPAdES() {
-			String command = jCommander.getParsedCommand();
-			if (command.equals(ArgsParser.padesCommandLabel))
-				return true;
-			return false;
-		}
+	private boolean isPAdES() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(ArgsParser.padesCommandLabel))
+			return true;
+		return false;
+	}
 
-	// Converter 
+	// Converter
 	// create a file from a string
 	public class FileConverter implements IStringConverter<File> {
 		@Override
@@ -248,7 +250,5 @@ public class ArgsParser {
 			return new File(value);
 		}
 	}
-
-	
 
 }

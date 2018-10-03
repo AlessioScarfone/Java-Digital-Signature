@@ -3,9 +3,9 @@ package com.unical.digitalsignature;
 import java.io.File;
 
 import com.google.common.io.Files;
+import com.unical.argparser.ArgsParser;
 
 import eu.europa.esig.dss.AbstractSignatureParameters;
-import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DigestAlgorithm;
 import eu.europa.esig.dss.SignatureLevel;
 import eu.europa.esig.dss.SignaturePackaging;
@@ -16,7 +16,7 @@ import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 
 public class CAdESSignFactory extends AbstractSignFactory {
-	
+
 	public CAdESSignFactory(File inputFile) {
 		super(inputFile);
 	}
@@ -47,19 +47,18 @@ public class CAdESSignFactory extends AbstractSignFactory {
 		return service;
 	}
 
-	@Override
-	public void createSignedFile(DSSDocument signedDocument) {
-		String newfilename = inputFile.getName() + ".p7m";
-		int c = 1;
-		while (new File(newfilename).exists()) {
-			newfilename = Files.getNameWithoutExtension(inputFile.getName()) + "(" + c + ")."
-					+ Files.getFileExtension(inputFile.getName()) + ".p7m";
-			c++;
-		}
-
-		String dir = getOutputFilePath();
-
-		writeFile(dir,newfilename,signedDocument);
+	
+	protected String getNameNewFile() {
+		String newfilename = ArgsParser.getInstance().getNameNewFile();
+		// use default name
+		if (newfilename == null)
+			newfilename = inputFile.getName() + ".p7m";
+		
+		// add p7m extension if is not present
+		else if (!Files.getFileExtension(newfilename).equals("p7m"))
+			newfilename = newfilename + ".p7m";
+		
+		return checkIfFileExist(newfilename);
 	}
 
 }

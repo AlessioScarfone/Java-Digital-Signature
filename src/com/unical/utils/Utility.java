@@ -3,9 +3,9 @@ package com.unical.utils;
 import java.io.Console;
 
 public class Utility {
-	
+
 	public static String separator = System.getProperty("file.separator");
-	
+
 	public static String buildFilePath(String... strings) {
 		String path = "";
 		for (int i = 0; i < strings.length; i++) {
@@ -15,7 +15,7 @@ public class Utility {
 		}
 		return path;
 	}
-	
+
 	public static String checkOSArchitecture() {
 		String arch = System.getenv("PROCESSOR_ARCHITECTURE");
 		String wow64Arch = System.getenv("PROCESSOR_ARCHITEW6432");
@@ -26,8 +26,8 @@ public class Utility {
 			realArch = "32";
 		return realArch;
 	}
-	
-	public  static char[] readPasswordFromConsole() {
+
+	public static char[] readPasswordFromConsole() {
 		Console cnsl = null;
 
 		try {
@@ -45,7 +45,7 @@ public class Utility {
 		}
 		return null;
 	}
-	
+
 	public static boolean isInteger(String s) {
 		try {
 			Integer.parseInt(s);
@@ -57,9 +57,9 @@ public class Utility {
 		// only got here if we didn't return false
 		return true;
 	}
-	
-	/**get a integer in [ minInt , maxInt [**/
-	public static int getValidIntInRange(String text,int minInt,int maxInt) {
+
+	/** get a integer in [ minInt , maxInt [ **/
+	public static int getValidIntInRange(String text, int minInt, int maxInt) {
 		System.out.print(text);
 		int n = -1;
 		String readLine = System.console().readLine();
@@ -75,9 +75,9 @@ public class Utility {
 				n = -1;
 			else if (Utility.isInteger(readLine))
 				n = Integer.parseInt(readLine);
-			
+
 		}
 		return n;
 	}
-	
+
 }

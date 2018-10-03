@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.io.Files;
 import com.unical.argparser.ArgsParser;
 import com.unical.utils.Utility;
 
@@ -99,6 +100,43 @@ public abstract class AbstractSignFactory implements ISignFactory {
 		}
 		return selectedKey;
 	}
+	
+	@Override
+	public void createSignedFile(DSSDocument signedDocument) {
+		String newfilename = getNameNewFile();
+
+		String dir = getOutputDirectory();
+
+		writeFile(dir, newfilename, signedDocument);
+		
+	}
+
+	protected abstract String getNameNewFile();
+	
+	public String getOutputDirectory() {
+		String dir=ArgsParser.getInstance().getOutputDirectory();
+		if(dir == null)
+			dir = inputFile.getParent();
+		if (dir == null)
+			dir = ".";
+		File fileDest =new File(dir);
+		if (!fileDest.exists())
+			fileDest.mkdirs();
+		
+		return dir;
+	}
+	
+	protected String checkIfFileExist(String newfilename) {
+		// check if file already exist
+		String dir = getOutputDirectory();
+		int c = 1;
+		while (new File(Utility.buildFilePath(dir,newfilename)).exists()) {
+			newfilename = Files.getNameWithoutExtension(newfilename) + "(" + c + ")."
+					+ Files.getFileExtension(newfilename);
+			c++;
+		}
+		return newfilename;
+	}
 
 	public void writeFile(String dir, String newfilename, DSSDocument signedDocument) {
 		System.out.println("Create signed file: " + newfilename);
@@ -114,19 +152,6 @@ public abstract class AbstractSignFactory implements ISignFactory {
 		}
 	}
 	
-	public String getOutputFilePath() {
-		String dir=ArgsParser.getInstance().getDestination();
-		if(dir == null)
-			dir = inputFile.getParent();
-		if (dir == null)
-			dir = ".";
-		File fileDest =new File(dir);
-		if (!fileDest.exists())
-			fileDest.mkdirs();
-		
-		return dir;
-		
-	}
 
 	private boolean haveNonRepudiation(DSSPrivateKeyEntry key) {
 		boolean[] keyUsage = key.getCertificate().getCertificate().getKeyUsage();
