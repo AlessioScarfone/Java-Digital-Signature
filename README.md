@@ -134,7 +134,7 @@ End of signing process.
 ```
 
 - **Visible signature** (`-v` option or `-vi` for use also an image).
-If the *pdf* contain some signable field, the tool ask to user if he would to use one of them, else the signature is positioned it le left bottom corner of the first page. The position of the signature can be customized using the options `-pg`, `-pv`, `-ph` (*page, vertical postion, horizontal position*)
+If the *pdf* contain some signable field, the tool ask to user if he would to use one of them, else the signature is positioned in the left bottom corner of the first page. The position of the signature can be customized using the options `-pg`, `-pv`, `-ph` (*page, vertical postion, horizontal position*)
 
 ```
 >java -jar signer.jar pades -v test.pdf
