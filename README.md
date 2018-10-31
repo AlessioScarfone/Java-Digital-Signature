@@ -183,7 +183,7 @@ If the field name is already known, it can be provided with  `-f` option.
 -----
 
 #### NOTE:
-- Tested only on **Windows 10 (JDK8 u181).**
+- Tested only on **Windows 10, 8.1 (Oracle JDK8).**
 
 - **Tested with Aruba Token Usb with Italian CNS**: [Link to Aruba token page](https://www.pec.it/cns-token.aspx)
 
