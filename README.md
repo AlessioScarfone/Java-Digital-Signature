@@ -1,7 +1,7 @@
 # Java-Digital-Signature
 Java command line tool for digital signature with PKCS#11 token.
 
-For use the tool is sufficient run `signer.jar`.
+To use the tool simply run `signer.jar`.
 
 ```
 # help
@@ -90,7 +90,7 @@ Key Usage:
 
 For more detailed info use `-i` option.
 
-The *jar* contain the driver used for the token in use (see **NOTE** section at the end of the Readme) and auto extract it, in the same folder of the jar,  at the first run. 
+The *jar* contain the driver used for the token in use (see **NOTE** section at the end of the Readme) and auto extract it, in the same folder of the jar, at the first run. 
 
 It is possible to **use a specific driver** with the `-d` option.
 
@@ -134,7 +134,7 @@ End of signing process.
 ```
 
 - **Visible signature** (`-v` option or `-vi` for use also an image).
-If the *pdf* contain some signable field, the tool ask to user if he would to use one of them, else the signature is positioned it le left bottom corner of the first page. The position of the signature can be customized using the options `-pg`, `-pv`, `-ph` (*page, vertical postion, horizontal position*)
+If the *pdf* contains some signable fields, the tool ask to user if he would to use one of them, else the signature is positioned in the left bottom corner of the first page. The position of the signature can be customized using the options `-pg`, `-pv`, `-ph` (*page, vertical postion, horizontal position*)
 
 ```
 >java -jar signer.jar pades -v test.pdf
@@ -183,7 +183,7 @@ If the field name is already known, it can be provided with  `-f` option.
 -----
 
 #### NOTE:
-- Tested only on **Windows (JDK8 u181).**
+- Tested only on **Windows 10, 8.1 (Oracle JDK8).**
 
 - **Tested with Aruba Token Usb with Italian CNS**: [Link to Aruba token page](https://www.pec.it/cns-token.aspx)
 
