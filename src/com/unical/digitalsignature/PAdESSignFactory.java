@@ -33,6 +33,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.apache.pdfbox.pdmodel.interactive.form.PDSignatureField;
 
 import com.google.common.io.Files;
 import com.unical.argparser.ArgsParser;
@@ -203,7 +204,7 @@ public class PAdESSignFactory extends AbstractSignFactory {
 		List<PDField> fields_empty = new ArrayList<PDField>();
 		for (PDField pdField : fields) {
 			// show only empty fields
-			if (pdField.getValueAsString().isEmpty()) {
+			if (pdField.getValueAsString().isEmpty() && pdField instanceof PDSignatureField) {
 				fields_empty.add(pdField);
 			}
 		}
