@@ -22,7 +22,7 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
       show certificates info
       Default: false
   Commands:
-    cades      CAdES sign format
+    cades      CAdES signature format
       Usage: cades [options] FileToSign
         Options:
           -h, --help
@@ -34,7 +34,7 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
           -n, --newfile-name
             set name of the new file
 
-    pades      PAdES sign format
+    pades      PAdES signature format
       Usage: pades [options] FileToSign
         Options:
           -h, --help
