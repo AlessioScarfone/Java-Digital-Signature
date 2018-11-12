@@ -25,7 +25,7 @@ import eu.europa.esig.dss.pades.SignatureImageParameters;
 import eu.europa.esig.dss.pades.SignatureImageParameters.VisualSignatureAlignmentHorizontal;
 import eu.europa.esig.dss.pades.SignatureImageParameters.VisualSignatureAlignmentVertical;
 
-@Parameters(commandDescription = "PAdES sign format")
+@Parameters(commandDescription = "PAdES signature format")
 public class PAdESCommand extends CommonParam {
 
 	@Parameter(description = "FileToSign", converter = FileConverter.class, arity = 1, order = 5)

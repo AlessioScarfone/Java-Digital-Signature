@@ -21,7 +21,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.unical.argparser.ArgsParser.FileConverter;
 
-@Parameters(commandDescription = "CAdES sign format")
+@Parameters(commandDescription = "CAdES signature format")
 public class CAdESCommand extends CommonParam {
 	@Parameter(description = "FileToSign", converter = FileConverter.class)
 	private File fileToSign;
