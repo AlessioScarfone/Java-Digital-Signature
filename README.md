@@ -1,4 +1,4 @@
-# Java-Digital-Signature
+display this help# Java-Digital-Signature
 Java command line tool for digital signature with PKCS#11 token.
 
 To use the tool simply run `signer.jar`.
@@ -10,7 +10,7 @@ To use the tool simply run `signer.jar`.
 Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
   Options:
     -h, --help
-      show usage
+      display help
     -d, --driver
       PKCS#11 Driver
     -p, --password
@@ -26,7 +26,7 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
       Usage: cades [options] FileToSign
         Options:
           -h, --help
-            show usage
+            display help
           -c, --choose-certificate
             choose certificate tu use
           -o, --output-folder
@@ -38,7 +38,7 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
       Usage: pades [options] FileToSign
         Options:
           -h, --help
-            show usage
+            display help
           -c, --choose-certificate
             choose certificate tu use
           -o, --output-folder

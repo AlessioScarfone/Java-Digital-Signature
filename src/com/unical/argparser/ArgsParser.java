@@ -39,7 +39,7 @@ public class ArgsParser {
 	// ------------------------
 	// ---- CLI Parameters ----
 	// ------------------------
-	@Parameter(names = { "-h", "--help" }, description = "show usage", help = true, order = 0)
+	@Parameter(names = { "-h", "--help" }, description = "display help", help = true, order = 0)
 	private boolean help = false;
 
 	@Parameter(names = { "-u", "--key-usage" }, description = "show key usage", order = 2)
