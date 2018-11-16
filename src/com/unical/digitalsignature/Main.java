@@ -124,7 +124,7 @@ public class Main {
 
 	private static void showInfo(boolean info, boolean keyusage) {
 		char[] pass = getPassword();
-		AbstractSignFactory factory = new CAdESSignFactory(null); // no file is needed
+		AbstractSignatureFactory factory = new CAdESSignFactory(null); // no file is needed
 		Pkcs11SignatureToken token = factory.connectToToken(currentDriverPath, pass);
 		List<DSSPrivateKeyEntry> keys;
 		try {
@@ -172,7 +172,7 @@ public class Main {
 
 		System.out.println();
 
-		AbstractSignFactory factory = null;
+		AbstractSignatureFactory factory = null;
 		if (selectedSignFormat == SignFormat.CADES) {
 			factory = new CAdESSignFactory(inputFile);
 		} else if (selectedSignFormat == SignFormat.PADES) {
@@ -181,7 +181,7 @@ public class Main {
 				System.err.println("Error create PAdES Prop");
 				return;
 			}
-			factory = new PAdESSignFactory(padesProp, inputFile);
+			factory = new PAdESSignatureFactory(padesProp, inputFile);
 		}
 
 		Pkcs11SignatureToken token = factory.connectToToken(currentDriverPath, pass);

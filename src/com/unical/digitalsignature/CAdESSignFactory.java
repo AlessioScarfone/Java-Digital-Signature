@@ -30,7 +30,7 @@ import eu.europa.esig.dss.signature.AbstractSignatureService;
 import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 
-public class CAdESSignFactory extends AbstractSignFactory {
+public class CAdESSignFactory extends AbstractSignatureFactory {
 
 	public CAdESSignFactory(File inputFile) {
 		super(inputFile);

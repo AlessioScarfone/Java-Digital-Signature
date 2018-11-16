@@ -33,7 +33,7 @@ import eu.europa.esig.dss.token.Pkcs11SignatureToken;
 import eu.europa.esig.dss.utils.Utils;
 import eu.europa.esig.dss.x509.CertificateToken;
 
-public abstract class AbstractSignFactory implements ISignFactory {
+public abstract class AbstractSignatureFactory implements ISignatureFactory {
 
 	protected File inputFile;
 	private String keyUsageLabel[] = { "digitalSignature", "nonRepudiation", "keyEncipherment", "dataEncipherment",
@@ -41,7 +41,7 @@ public abstract class AbstractSignFactory implements ISignFactory {
 
 	private final int nonRepudiationIndex = 1;
 
-	public AbstractSignFactory(File inputFile) {
+	public AbstractSignatureFactory(File inputFile) {
 		this.inputFile = inputFile;
 	}
 

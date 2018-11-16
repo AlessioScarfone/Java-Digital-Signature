@@ -55,11 +55,11 @@ import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.x509.CertificateToken;
 
-public class PAdESSignFactory extends AbstractSignFactory {
+public class PAdESSignatureFactory extends AbstractSignatureFactory {
 
 	private PAdESProp prop;
 
-	public PAdESSignFactory(PAdESProp padesProp, File inputFile) {
+	public PAdESSignatureFactory(PAdESProp padesProp, File inputFile) {
 		super(inputFile);
 		prop = padesProp;
 	}

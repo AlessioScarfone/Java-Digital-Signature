@@ -25,7 +25,7 @@ import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
 import eu.europa.esig.dss.token.Pkcs11SignatureToken;
 import eu.europa.esig.dss.x509.CertificateToken;
 
-public interface ISignFactory {
+public interface ISignatureFactory {
 
 	public Pkcs11SignatureToken connectToToken(File driverPath, char[] pass);
 
