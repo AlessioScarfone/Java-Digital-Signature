@@ -186,7 +186,9 @@ If the field name is already known, it can be provided with  `-f` option.
 - Tested only on **Windows 10, 8.1 (Oracle JDK8).**
 
 - **Tested with Bit4id smart card reader and an Italian CNS** (all provided by Aruba): 
+
     [Link to Aruba page](https://www.pec.it/cns-token.aspx) 
+    
     [Link to Bit4id usb token](https://www.bit4id.com/en/lettore-di-smart-card-minilector-s-evo/)
 
 ![Token Image](https://www.pec.it/getattachment/20362be8-daa3-44a6-9a91-4d801245baa7/Token)
