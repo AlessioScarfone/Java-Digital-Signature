@@ -28,7 +28,7 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
           -h, --help
             display help
           -c, --choose-certificate
-            choose certificate tu use
+            choose certificate to use
           -o, --output-folder
             set destination FOLDER for the output file
           -n, --newfile-name
@@ -40,7 +40,7 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
           -h, --help
             display help
           -c, --choose-certificate
-            choose certificate tu use
+            choose certificate to use
           -o, --output-folder
             set destination FOLDER for the output file
           -n, --newfile-name
