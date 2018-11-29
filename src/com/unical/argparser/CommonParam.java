@@ -24,7 +24,7 @@ public abstract class CommonParam {
 	@Parameter(names = { "-h", "--help" }, description = "display help", help = true, order = 0)
 	private boolean help = false;
 	
-	@Parameter(names = { "-c", "--choose-certificate" }, description = "choose certificate tu use", help = true, order = 1)
+	@Parameter(names = { "-c", "--choose-certificate" }, description = "choose certificate to use", help = true, order = 1)
 	private boolean choice_certificate = false;
 	
 	@Parameter(names = { "-o", "--output-folder" }, description = "set destination FOLDER for the output file", help = true, order = 2)
