@@ -99,7 +99,7 @@ It is possible to **use a specific driver** with the `-d` option.
 ```
 # Basic usage:
 >java -jar signer.jar cades test.pdf
-Selected Sign Format: CADES
+Selected Signature Format: CADES
 Start Signature Procedure
 Password:
 
@@ -122,7 +122,7 @@ It is possible to specify folder and name of the output file with `-o` and `-n` 
 
 ```
 >java -jar signer.jar pades test.pdf
-Selected Sign Format: PADES
+Selected Signature Format: PADES
 Start Signature Procedure
 Password:
 
