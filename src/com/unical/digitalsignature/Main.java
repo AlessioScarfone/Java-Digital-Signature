@@ -118,7 +118,7 @@ public class Main {
 		selectedSignFormat = cmdr.checkSelectedSignFormat();
 		if (selectedSignFormat == null)
 			return false;
-		System.out.println("Selected Sign Format: " + selectedSignFormat.toString());
+		System.out.println("Selected Signature Format: " + selectedSignFormat.toString());
 		return true;
 	}
 
