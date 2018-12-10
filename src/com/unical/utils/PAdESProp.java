@@ -30,12 +30,14 @@ public class PAdESProp {
 	private VisualSignatureAlignmentHorizontal posH = VisualSignatureAlignmentHorizontal.LEFT; 
 	private VisualSignatureAlignmentVertical posV = VisualSignatureAlignmentVertical.BOTTON;
 	
+	private boolean skipFieldToUseSelection = false;
+	
 //	private float posX = 0;
 //	private float posY = 0;
 	
 	private int page = 1; //page start from 1
 	
-	public PAdESProp(boolean useVisibleSignature, File file,String fieldNameToSign,VisualSignatureAlignmentHorizontal posHor,VisualSignatureAlignmentVertical posVer,int page) {
+	public PAdESProp(boolean useVisibleSignature, File file,String fieldNameToSign,VisualSignatureAlignmentHorizontal posHor,VisualSignatureAlignmentVertical posVer,int page, boolean skipFieldToUseSelection) {
 		super();
 		this.useVisibileSign = useVisibleSignature;
 		this.imageFile = file;
@@ -45,6 +47,7 @@ public class PAdESProp {
 		if(posVer != null)
 			this.posV = posVer;
 		this.page = page;
+		this.skipFieldToUseSelection = skipFieldToUseSelection;
 	}
 
 	public boolean useVisibleSign() {
@@ -90,5 +93,10 @@ public class PAdESProp {
 	public String getFieldName() {
 		return fieldName;
 	}
+
+	public boolean getSkipFieldToUseSelection() {
+		return skipFieldToUseSelection;
+	}
+
 
 }

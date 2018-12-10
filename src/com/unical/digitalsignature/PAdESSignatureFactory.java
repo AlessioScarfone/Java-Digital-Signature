@@ -149,16 +149,21 @@ public class PAdESSignatureFactory extends AbstractSignatureFactory {
 						parameters.setSignatureFieldId(nameFieldToSign);
 						return true;
 					} else {
-						printListEmptyField(allPages, fields_empty);
-						int n = Utility.getValidIntInRange("Select Field to use (-1 or Enter for skip):", -1,
-								fields_empty.size());
-						if (n != -1)
-							parameters.setSignatureFieldId(fields_empty.get(n).getFullyQualifiedName());
-						else {
-							System.out.println("No Field selected.");
+						if (prop.getSkipFieldToUseSelection() == true) {
+							System.out.println("Skip the selection of the field to be signed");
 							return false;
+						} else {
+							printListEmptyField(allPages, fields_empty);
+							int n = Utility.getValidIntInRange("Enter the number of the field to use (-1 or Enter for skip):", -1,
+									fields_empty.size());
+							if (n != -1)
+								parameters.setSignatureFieldId(fields_empty.get(n).getFullyQualifiedName());
+							else {
+								System.out.println("No Field selected.");
+								return false;
+							}
+							return true;
 						}
-						return true;
 					}
 				} else {
 					System.out.println("No available field in the pdf.");
@@ -173,7 +178,7 @@ public class PAdESSignatureFactory extends AbstractSignatureFactory {
 		}
 		return false;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public AbstractSignatureService createService() {
 		// Create common certificate verifier
@@ -185,21 +190,21 @@ public class PAdESSignatureFactory extends AbstractSignatureFactory {
 
 	@Override
 	protected String getNameNewFile() {
-		//check if user specify a new name
+		// check if user specify a new name
 		String newfilename = ArgsParser.getInstance().getNameNewFile();
-		
-		//use default name
-		if(newfilename == null) 
+
+		// use default name
+		if (newfilename == null)
 			newfilename = Files.getNameWithoutExtension(inputFile.getName()) + "-signed.pdf";
-		
-		//add pdf extension if is not present
-		else if(!Files.getFileExtension(newfilename).equals("pdf"))
-			newfilename = newfilename+".pdf";
-		
+
+		// add pdf extension if is not present
+		else if (!Files.getFileExtension(newfilename).equals("pdf"))
+			newfilename = newfilename + ".pdf";
+
 		return checkIfFileExist(newfilename);
 	}
-	
-	//get only empty fields (usable for signature)
+
+	// get only empty fields (usable for signature)
 	private List<PDField> createListEmptyField(List<PDField> fields) {
 		List<PDField> fields_empty = new ArrayList<PDField>();
 		for (PDField pdField : fields) {
@@ -217,7 +222,7 @@ public class PAdESSignatureFactory extends AbstractSignatureFactory {
 			String fieldName = pdField.getFullyQualifiedName();
 			PDPage currentPage = pdField.getWidgets().get(0).getPage();
 			int pageNumber = allPages.indexOf(currentPage) + 1;
-			System.out.println("[" + c + "] - page:" + pageNumber + " - " + fieldName);
+			System.out.println("[" + c + "] - page:" + pageNumber + " - Field Name: " + fieldName);
 			c++;
 		}
 	}
@@ -227,7 +232,7 @@ public class PAdESSignatureFactory extends AbstractSignatureFactory {
 			if (pdField.getFullyQualifiedName().equals(nameFieldToSign))
 				return true;
 		}
-		System.out.println("There is no empty field named '"+ nameFieldToSign+"' in the document");
+		System.out.println("There is no empty field named '" + nameFieldToSign + "' in the document");
 		return false;
 	}
 

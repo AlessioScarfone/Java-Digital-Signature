@@ -50,6 +50,9 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
             Default: false
           -vi, --visible-signature-image
             add visible signature - text and image
+          -s, --skip-field-selection
+          	skip the choice of the field to use
+          	Default: false
           -f, --field-to-sign
             name of the field to sign
           -pg, --page
@@ -134,7 +137,7 @@ End of signing process.
 ```
 
 - **Visible signature** (`-v` option or `-vi` for use also an image).
-If the *pdf* contains some signable fields, the tool ask to user if he would to use one of them, else the signature is positioned in the left bottom corner of the first page. The position of the signature can be customized using the options `-pg`, `-pv`, `-ph` (*page, vertical postion, horizontal position*)
+If the *pdf* contains some signable fields, the tool asks to user if he wants to use one of them, else the signature is placed in the lower left corner of the first page. The position of the signature can be customized using the options `-pg`, `-pv`, `-ph` (*page, vertical postion, horizontal position*)
 
 ```
 >java -jar signer.jar pades -v test.pdf
@@ -153,7 +156,7 @@ End of signing process.
 
 ```
 
-- Try to sign a document that contain signable **field**:
+- Try to sign a document that contains signable **fields**:
 
 ```
 >java -jar signer.jar pades -v test-form.pdf                                                      
@@ -167,12 +170,13 @@ Select Field to use (-1 or Enter for skip):0
 ```
 In this way the field named 'Signature' was used for contain the signature.
 If the field name is already known, it can be provided with  `-f` option.
+For skip this step use `-s` option.
 
 ```
 >java -jar signer.jar pades -v test-form.pdf -f Signature
 ```
 
-**NB:** if a field is selected all options of position (`-pg`, `-pv`, `-ph`) are ignored. 
+**NB:** if a field is selected, all placement options (`-pg`, `-pv`, `-ph`) are ignored. 
 
 -----
 #### Dependencies: 

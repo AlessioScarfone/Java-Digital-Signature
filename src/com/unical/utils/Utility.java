@@ -78,6 +78,9 @@ public class Utility {
 		System.out.print(text);
 		int n = -1;
 		String readLine = System.console().readLine();
+		if(readLine == null)
+			System.exit(0);
+		
 		if (readLine.isEmpty())
 			n = -1;
 		else if (Utility.isInteger(readLine))

@@ -111,7 +111,7 @@ public class ArgsParser {
 	public PAdESProp createPAdESProp() {
 		if (isPAdES())
 			return new PAdESProp(useVisibleSignature(), getUseVisibleSignatureImage(), getNameFieldToSign(),
-					getHorizontalAlignment(), getVerticalAlignment(), getPage());
+					getHorizontalAlignment(), getVerticalAlignment(), getPage(), getSkipFieldToUseSelection());
 		return null;
 	}
 
@@ -150,6 +150,13 @@ public class ArgsParser {
 		if (command.equals(padesCommandLabel))
 			return getPadesCommand().getNameFieldToSign();
 		return null;
+	}
+	
+	public boolean getSkipFieldToUseSelection() {
+		String command = jCommander.getParsedCommand();
+		if (command.equals(padesCommandLabel))
+			return getPadesCommand().getSkipFieldToUseSelection();
+		return false;
 	}
 
 	public String getOutputDirectory() {
