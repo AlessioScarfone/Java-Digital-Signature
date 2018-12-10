@@ -98,7 +98,8 @@ public class Main {
 
 		// check selected sign format
 		if (!checkSelectedSignFormat()) {
-			System.err.println("Select (only) one between PAdES and CAdES.");
+			//if there is no command shows help
+			cmdr.showDefaultHelp();
 			return;
 		}
 

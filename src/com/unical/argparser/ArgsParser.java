@@ -198,6 +198,10 @@ public class ArgsParser {
 		// else
 		return driver;
 	}
+	
+	public void showDefaultHelp() {
+		jCommander.usage();
+	}
 
 	public void showHelp() {
 		List<ParameterDescription> parameters = null;
@@ -243,14 +247,14 @@ public class ArgsParser {
 
 	private boolean isCAdES() {
 		String command = jCommander.getParsedCommand();
-		if (command.equals(ArgsParser.cadesCommandLabel))
+		if (command != null && command.equals(ArgsParser.cadesCommandLabel))
 			return true;
 		return false;
 	}
 
 	private boolean isPAdES() {
 		String command = jCommander.getParsedCommand();
-		if (command.equals(ArgsParser.padesCommandLabel))
+		if (command != null && command.equals(ArgsParser.padesCommandLabel))
 			return true;
 		return false;
 	}
