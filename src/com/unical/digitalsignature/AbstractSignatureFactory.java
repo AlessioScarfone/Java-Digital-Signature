@@ -96,7 +96,7 @@ public abstract class AbstractSignatureFactory implements ISignatureFactory {
 					}
 				}
 				if (!usable_keys.isEmpty()) {
-					int n = Utility.getValidIntInRange("Select a certificate to use:",0,usable_keys.size());
+					int n = Utility.getValidIntInRange("Select a certificate to use:", 0, usable_keys.size());
 					selectedKey = usable_keys.get(n);
 				}
 			} else {
@@ -114,7 +114,7 @@ public abstract class AbstractSignatureFactory implements ISignatureFactory {
 		}
 		return selectedKey;
 	}
-	
+
 	@Override
 	public void createSignedFile(DSSDocument signedDocument) {
 		String newfilename = getNameNewFile();
@@ -122,32 +122,40 @@ public abstract class AbstractSignatureFactory implements ISignatureFactory {
 		String dir = getOutputDirectory();
 
 		writeFile(dir, newfilename, signedDocument);
-		
+
 	}
 
 	protected abstract String getNameNewFile();
-	
+
 	public String getOutputDirectory() {
-		String dir=ArgsParser.getInstance().getOutputDirectory();
-		if(dir == null)
+		String dir = ArgsParser.getInstance().getOutputDirectory();
+		if (dir == null)
 			dir = inputFile.getParent();
 		if (dir == null)
 			dir = ".";
-		File fileDest =new File(dir);
+		File fileDest = new File(dir);
 		if (!fileDest.exists())
 			fileDest.mkdirs();
-		
+
 		return dir;
 	}
-	
+
 	protected String checkIfFileExist(String newfilename) {
 		// check if file already exist
 		String dir = getOutputDirectory();
 		int c = 1;
+		String originalFileName = Files.getNameWithoutExtension(newfilename);
+		String originalExt = Files.getFileExtension(originalFileName);
 		String currentName = newfilename;
-		while (new File(Utility.buildFilePath(dir,currentName)).exists()) {
-			currentName = Files.getNameWithoutExtension(newfilename) + "(" + c + ")."
-					+ Files.getFileExtension(newfilename);
+		while (new File(Utility.buildFilePath(dir, currentName)).exists()) {
+
+			if (Files.getFileExtension(newfilename).equals("p7m")) {
+				// if the file is in cades format it has two extensions.The original
+				// and the p7m extension, then adds the counter before the first extension
+				currentName = Files.getNameWithoutExtension(originalFileName) + "(" + c + ")." + originalExt + ".p7m";
+			} else {
+				currentName = originalFileName + "(" + c + ")." + Files.getFileExtension(newfilename);
+			}
 			c++;
 		}
 		return currentName;
@@ -166,7 +174,6 @@ public abstract class AbstractSignatureFactory implements ISignatureFactory {
 			// e.printStackTrace();
 		}
 	}
-	
 
 	private boolean haveNonRepudiation(DSSPrivateKeyEntry key) {
 		boolean[] keyUsage = key.getCertificate().getCertificate().getKeyUsage();

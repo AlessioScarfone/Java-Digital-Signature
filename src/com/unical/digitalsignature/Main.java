@@ -234,7 +234,7 @@ public class Main {
 		}
 
 //		if (selectedSignFormat == SignFormat.PADES && !Files.getFileExtension(inputFile.getName()).equals("pdf")) {
-		if (selectedSignFormat == SignFormat.PADES && isPDF(inputFile)) {
+		if (selectedSignFormat == SignFormat.PADES && !isPDF(inputFile)) {
 			System.err.println("File is not a pdf.");
 			return false;
 		}
@@ -249,14 +249,13 @@ public class Main {
 					fileContent[1] == 0x50 && // P
 					fileContent[2] == 0x44 && // D
 					fileContent[3] == 0x46 && // F
-					fileContent[3] == 0x2d) { // -
+					fileContent[4] == 0x2d) { // -
 				return true;
 			}
 		} catch (IOException e) {
 			System.err.println("Unable to check if the file is a pdf.");
 //			e.printStackTrace();
 		}
-
 		return false;
 	}
 

@@ -66,8 +66,12 @@ public class CAdESSignatureFactory extends AbstractSignatureFactory {
 	protected String getNameNewFile() {
 		String newfilename = ArgsParser.getInstance().getNameNewFile();
 		// use default name
-		if (newfilename == null)
-			newfilename = inputFile.getName() + ".p7m";
+		if (newfilename == null) {
+			if(Files.getFileExtension(inputFile.getName()).equals("p7m") == false)
+				newfilename = inputFile.getName() + ".p7m";
+			else
+				newfilename = inputFile.getName();
+		}
 		
 		//add original extension if is not present
 		if(Files.getFileExtension(newfilename).equals(""))
