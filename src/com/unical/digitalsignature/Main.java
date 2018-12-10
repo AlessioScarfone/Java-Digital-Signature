@@ -42,6 +42,9 @@ import eu.europa.esig.dss.token.Pkcs11SignatureToken;
 import eu.europa.esig.dss.x509.CertificateToken;
 
 public class Main {
+	
+	//TODO: pdf maiuscolo
+	//TODO: se non c'è il main parameter mostra l'help
 
 	private enum SystemType {
 		WINDOWS, LINUX, MAC
@@ -231,6 +234,7 @@ public class Main {
 			System.err.println("File not exist.");
 			return false;
 		}
+
 		if (selectedSignFormat == SignFormat.PADES && !Files.getFileExtension(inputFile.getName()).equals("pdf")) {
 			System.err.println("File is not a pdf.");
 			return false;
