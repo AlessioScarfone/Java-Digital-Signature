@@ -42,9 +42,6 @@ import eu.europa.esig.dss.token.Pkcs11SignatureToken;
 import eu.europa.esig.dss.x509.CertificateToken;
 
 public class Main {
-	
-	//TODO: pdf maiuscolo
-	//TODO: se non c'è il main parameter mostra l'help
 
 	private enum SystemType {
 		WINDOWS, LINUX, MAC
@@ -98,7 +95,7 @@ public class Main {
 
 		// check selected sign format
 		if (!checkSelectedSignFormat()) {
-			//if there is no command shows help
+			// if there is no command shows help
 			cmdr.showDefaultHelp();
 			return;
 		}
@@ -236,11 +233,31 @@ public class Main {
 			return false;
 		}
 
-		if (selectedSignFormat == SignFormat.PADES && !Files.getFileExtension(inputFile.getName()).equals("pdf")) {
+//		if (selectedSignFormat == SignFormat.PADES && !Files.getFileExtension(inputFile.getName()).equals("pdf")) {
+		if (selectedSignFormat == SignFormat.PADES && isPDF(inputFile)) {
 			System.err.println("File is not a pdf.");
 			return false;
 		}
 		return true;
+	}
+
+	private static boolean isPDF(File inputFile) {
+		byte[] fileContent;
+		try {
+			fileContent = Files.toByteArray(inputFile);
+			if (fileContent != null && fileContent.length > 4 && fileContent[0] == 0x25 && // %
+					fileContent[1] == 0x50 && // P
+					fileContent[2] == 0x44 && // D
+					fileContent[3] == 0x46 && // F
+					fileContent[3] == 0x2d) { // -
+				return true;
+			}
+		} catch (IOException e) {
+			System.err.println("Unable to check if the file is a pdf.");
+//			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 	private static boolean setDriver(File file) {
