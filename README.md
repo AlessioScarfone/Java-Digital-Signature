@@ -51,8 +51,8 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
           -vi, --visible-signature-image
             add visible signature - text and image
           -s, --skip-field-selection
-          	skip the choice of the field to use
-          	Default: false
+            skip the choice of the field to use
+            Default: false
           -f, --field-to-sign
             name of the field to sign
           -pg, --page
