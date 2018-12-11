@@ -81,8 +81,10 @@ public class CAdESSignatureFactory extends AbstractSignatureFactory {
 				String originalExt = Files.getFileExtension(Files.getNameWithoutExtension(inputFile.getName()));
 				newfilename = newfilename +"."+originalExt+".p7m";
 			}
-			else
+			else {
+				//add original extension
 				newfilename = newfilename +"."+Files.getFileExtension(inputFile.getName());
+			}
 		}
 		
 		
