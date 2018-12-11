@@ -69,13 +69,22 @@ public class CAdESSignatureFactory extends AbstractSignatureFactory {
 		if (newfilename == null) {
 			if(Files.getFileExtension(inputFile.getName()).equals("p7m") == false)
 				newfilename = inputFile.getName() + ".p7m";
-			else
+			else {
 				newfilename = inputFile.getName();
+			}
 		}
 		
 		//add original extension if is not present
-		if(Files.getFileExtension(newfilename).equals(""))
-			newfilename = newfilename +"."+Files.getFileExtension(inputFile.getName());
+		if(Files.getFileExtension(newfilename).equals("")) {
+			//file to sign is already a p7m 
+			if(Files.getFileExtension(inputFile.getName()).equals("p7m")) {
+				String originalExt = Files.getFileExtension(Files.getNameWithoutExtension(inputFile.getName()));
+				newfilename = newfilename +"."+originalExt+".p7m";
+			}
+			else
+				newfilename = newfilename +"."+Files.getFileExtension(inputFile.getName());
+		}
+		
 		
 		// add p7m extension if is not present
 		if (!Files.getFileExtension(newfilename).equals("p7m"))
