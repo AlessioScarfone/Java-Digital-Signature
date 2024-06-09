@@ -1,6 +1,13 @@
 # Java-Digital-Signature
 Java command line tool for digital signature with PKCS#11 token.
 
+## Support me
+If you find my work useful and would like to contribute, consider supporting me.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5Z4O75)
+
+
+## Instruction
 To use the tool simply run `signer.jar`.
 
 ```
