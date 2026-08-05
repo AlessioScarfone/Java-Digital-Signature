@@ -40,7 +40,7 @@ public class PAdESCommand extends CommonParam {
 	private boolean useTextVisibleSignature;
 
 	@Parameter(names = { "-vi",
-			"--visible-signature-image" }, description = "add visible signature - text and image ", arity = 1, order = 7)
+			"--visible-signature-image" }, description = "add visible signature - text and image (specify image file path)", arity = 1, order = 7)
 	private File useImageVisibleSignature;
 	
 	@Parameter(names = { "-s",
