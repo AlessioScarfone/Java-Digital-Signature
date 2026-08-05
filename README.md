@@ -56,7 +56,7 @@ Usage: PKCS#11 Digital Signature Tool [options] [command] [command options]
             add visible signature - only text
             Default: false
           -vi, --visible-signature-image
-            add visible signature - text and image
+            add visible signature - text and image (specify image file path)
           -s, --skip-field-selection
             skip the choice of the field to use
             Default: false
